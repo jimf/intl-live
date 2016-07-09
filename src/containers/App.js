@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import h from 'react-hyperscript';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import MessageEditor from '../components/MessageEditor';
+import ContextEditor from '../components/ContextEditor';
 
 const
     tab = createFactory(Tab),
     tabs = createFactory(Tabs),
     tabList = createFactory(TabList),
     tabPanel = createFactory(TabPanel),
-    messageEditor = createFactory(MessageEditor);
+    messageEditor = createFactory(MessageEditor),
+    contextEditor = createFactory(ContextEditor);
 
 class AppContainer extends Component {
     render() {
@@ -23,10 +25,15 @@ class AppContainer extends Component {
                         tab({ key: 'context-tab' }, 'Context')
                     ]),
                     tabPanel({ key: 'template-tabpanel' }, [
-                        messageEditor({ message: 'Hello {name}' })
+                        messageEditor({
+                            key: 'message-editor',
+                            message: 'Hello {name}'
+                        })
                     ]),
                     tabPanel({ key: 'context-tabpanel' }, [
-                        h('h2', { key: 'context-title' }, 'context panel')
+                        contextEditor({
+                            key: 'context-editor'
+                        })
                     ])
                 ])
             ])
