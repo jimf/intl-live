@@ -9,11 +9,14 @@ const quill = createFactory(Quill);
 class AppContainer extends Component {
     render() {
         return h('div.app.animated.fadeIn', [
-            quill({
-                theme: 'snow',
-                value: 'Hello {name}',
-                toolbar: false
-            })
+            h('div.container', [
+                h('h1', 'Intl Live'),
+                quill({
+                    theme: 'snow',
+                    value: 'Hello {name}',
+                    toolbar: false
+                })
+            ])
         ]);
     }
 }
