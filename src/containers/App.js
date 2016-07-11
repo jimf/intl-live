@@ -1,10 +1,12 @@
 import R from 'ramda';
 import { Component, createFactory } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import h from 'react-hyperscript';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import MessageEditor from '../components/MessageEditor';
 import ContextEditor from '../components/ContextEditor';
+import * as actions from '../actions';
 
 const
     tab = createFactory(Tab),
@@ -25,10 +27,9 @@ class AppContainer extends Component {
                         tab({ key: 'context-tab' }, 'Context')
                     ]),
                     tabPanel({ key: 'template-tabpanel' }, [
-                        messageEditor({
-                            key: 'message-editor',
-                            message: 'Hello {name}'
-                        })
+                        messageEditor(Object.assign({
+                            key: 'message-editor'
+                        }, this.props))
                     ]),
                     tabPanel({ key: 'context-tabpanel' }, [
                         contextEditor({
@@ -41,4 +42,7 @@ class AppContainer extends Component {
     }
 }
 
-export default connect(R.identity)(AppContainer);
+const mapStateToProps = R.identity;
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);
