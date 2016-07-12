@@ -1,4 +1,3 @@
-import R from 'ramda';
 import { Component, createFactory } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -7,6 +6,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import MessageEditor from '../components/MessageEditor';
 import ContextEditor from '../components/ContextEditor';
 import * as actions from '../actions';
+import * as selectors from '../selectors';
 
 const
     tab = createFactory(Tab),
@@ -18,13 +18,18 @@ const
 
 class AppContainer extends Component {
     render() {
+        const { variables } = this.props;
+
         return h('div.app.animated.fadeIn', [
             h('div.container', [
                 h('h1.header', 'Intl Live'),
                 tabs(null, [
                     tabList({ key: 'tablist' }, [
                         tab({ key: 'template-tab' }, 'Template'),
-                        tab({ key: 'context-tab' }, 'Context')
+                        tab({
+                            key: 'context-tab',
+                            disabled: variables.length === 0
+                        }, 'Context')
                     ]),
                     tabPanel({ key: 'template-tabpanel' }, [
                         messageEditor(Object.assign({
@@ -42,7 +47,9 @@ class AppContainer extends Component {
     }
 }
 
-const mapStateToProps = R.identity;
+const mapStateToProps = state => Object.assign({
+    variables: selectors.variables(state)
+}, state);
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);

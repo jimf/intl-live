@@ -1,3 +1,4 @@
+import h from 'react-hyperscript';
 import { createFactory, PropTypes } from 'react';
 import Quill from 'react-quill';
 
@@ -7,23 +8,37 @@ const formats = [];
 /**
  * Call props change handler with the text value of the editor on change.
  */
-const handleChange = onChange => (value, delta, source, editor) =>
-    onChange(editor.getText());
+const handleChange = onChange => (value, delta, source, editor) => {
+    const text = editor.getText();
 
-const MessageEditor = ({ message, setMessage }) => (
-    quill({
-        key: 'quill',
-        theme: 'snow',
-        toolbar: false,
-        formats,
-        value: message,
-        onChange: handleChange(setMessage)
-    })
+    // Fix bug with auto-trimming on change by not triggering event when space
+    // is typed.
+    if (!text.endsWith(' \n')) {
+        onChange(editor.getText());
+    }
+};
+
+const MessageEditor = ({ message, setMessage, variables }) => (
+    h('div', [
+        h('div', [
+            h('strong', 'Variables: '),
+            variables.join(', ')
+        ]),
+        quill({
+            key: 'quill',
+            theme: 'snow',
+            toolbar: false,
+            formats,
+            value: message,
+            onChange: handleChange(setMessage)
+        })
+    ])
 );
 
 MessageEditor.propTypes = {
     message: PropTypes.string.isRequired,
-    setMessage: PropTypes.func.isRequired
+    setMessage: PropTypes.func.isRequired,
+    variables: PropTypes.array.isRequired
 };
 
 export default MessageEditor;
