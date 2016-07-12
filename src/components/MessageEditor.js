@@ -18,7 +18,16 @@ const handleChange = onChange => (value, delta, source, editor) => {
     }
 };
 
-const MessageEditor = ({ message, setMessage, variables }) => (
+const withValue = cb => e => cb(e.target.value);
+
+const MessageEditor = ({
+    locales,
+    message,
+    renderLocale,
+    setMessage,
+    setRenderLocale,
+    variables
+}) => (
     h('div', [
         h('div', [
             h('strong', 'Variables: '),
@@ -31,13 +40,26 @@ const MessageEditor = ({ message, setMessage, variables }) => (
             formats,
             value: message,
             onChange: handleChange(setMessage)
-        })
+        }),
+        h('pre', [
+            h('code', '<rendering to go here>')
+        ]),
+        h('label.u-pull-right', [
+            'Locale: ',
+            h('select', {
+                value: renderLocale,
+                onChange: withValue(setRenderLocale)
+            }, locales.map(locale => h('option', locale)))
+        ])
     ])
 );
 
 MessageEditor.propTypes = {
+    locales: PropTypes.array.isRequired,
     message: PropTypes.string.isRequired,
+    renderLocale: PropTypes.string.isRequired,
     setMessage: PropTypes.func.isRequired,
+    setRenderLocale: PropTypes.func.isRequired,
     variables: PropTypes.array.isRequired
 };
 
