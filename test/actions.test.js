@@ -9,3 +9,12 @@ test('actions - SET_MESSAGE', t => {
     });
     t.end();
 });
+
+test('actions - SET_RENDER_LOCALE', t => {
+    t.equal(subject.SET_RENDER_LOCALE, 'SET_RENDER_LOCALE');
+    t.deepEqual(subject.setRenderLocale('dummy'), {
+        type: subject.SET_RENDER_LOCALE,
+        payload: 'dummy'
+    });
+    t.end();
+});

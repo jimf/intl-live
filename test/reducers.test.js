@@ -4,7 +4,16 @@ import subject from '../src/reducers';
 
 test('reducers - initial state', t => {
     t.deepEqual(subject(undefined, {}), {
-        message: ''
+        message: '',
+        renderLocale: 'en-US',
+        locales: [
+            'cs-CZ',
+            'en-US',
+            'es-AR',
+            'fr-FR',
+            'ja-JP',
+            'pt-BR'
+        ]
     });
     t.end();
 });
