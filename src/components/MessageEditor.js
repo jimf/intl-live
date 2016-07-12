@@ -24,6 +24,7 @@ const MessageEditor = ({
     locales,
     message,
     renderLocale,
+    rendered,
     setMessage,
     setRenderLocale,
     variables
@@ -42,7 +43,7 @@ const MessageEditor = ({
             onChange: handleChange(setMessage)
         }),
         h('pre', [
-            h('code', '<rendering to go here>')
+            h('code', rendered)
         ]),
         h('label.u-pull-right', [
             'Locale: ',
@@ -58,6 +59,7 @@ MessageEditor.propTypes = {
     locales: PropTypes.array.isRequired,
     message: PropTypes.string.isRequired,
     renderLocale: PropTypes.string.isRequired,
+    rendered: PropTypes.string.isRequired,
     setMessage: PropTypes.func.isRequired,
     setRenderLocale: PropTypes.func.isRequired,
     variables: PropTypes.array.isRequired
