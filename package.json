@@ -31,7 +31,8 @@
     "react-tabs": "^0.7.0",
     "redux": "^3.5.2",
     "redux-actions": "^0.10.1",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "reselect": "^2.5.3"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",
