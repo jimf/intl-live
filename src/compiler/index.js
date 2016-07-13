@@ -54,8 +54,8 @@ export const traverser = (ast, visitor) => {
                 traverse(node.options, node);
                 break;
 
-            // No children.
             case 'optionalFormatPattern':
+                traverse(node.value, node);
                 break;
 
             case 'pluralStyle':

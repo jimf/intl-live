@@ -3,7 +3,7 @@ import { parse } from 'intl-messageformat-parser';
 import { traverser } from '../../src/compiler';
 
 test('compiler.traverser', t => {
-    t.plan(14);
+    t.plan(20);
 
     const visitor = () => {
         const types = [];
@@ -77,8 +77,14 @@ test('compiler.traverser', t => {
         'argumentElement',
         'pluralFormat',
         'optionalFormatPattern',
+        'messageFormatPattern',
+        'messageTextElement',
         'optionalFormatPattern',
+        'messageFormatPattern',
+        'messageTextElement',
         'optionalFormatPattern',
+        'messageFormatPattern',
+        'messageTextElement',
         'messageTextElement'
     ]);
 
