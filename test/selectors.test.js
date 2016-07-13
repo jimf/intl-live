@@ -20,6 +20,12 @@ test('selectors - variables', t => {
                 message: '{this is a SyntaxError}'
             },
             expected: []
+        },
+        {
+            state: {
+                message: '{count} {count, plural, one {item} other {items} }'
+            },
+            expected: ['count']
         }
     ];
 

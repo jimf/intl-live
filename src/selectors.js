@@ -19,7 +19,7 @@ export const variables = createSelector(
 
         try {
             traverser(parse(message), visitor);
-            return visitor.getVariables();
+            return R.uniq(visitor.getVariables());
         } catch (err) {
             return [];
         }
