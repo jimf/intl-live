@@ -37,9 +37,9 @@ class AppContainer extends Component {
                         }, this.props))
                     ]),
                     tabPanel({ key: 'context-tabpanel' }, [
-                        contextEditor({
+                        contextEditor(Object.assign({
                             key: 'context-editor'
-                        })
+                        }, this.props))
                     ])
                 ])
             ])

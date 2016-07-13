@@ -1,9 +1,11 @@
 import h from 'react-hyperscript';
 import { createFactory, PropTypes } from 'react';
 import Quill from 'react-quill';
+import { withValue } from '../util';
 
 const quill = createFactory(Quill);
 const formats = [];
+const HAS_TRAILING_WHITESPACE = /[ \n\r]\n$/;
 
 /**
  * Call props change handler with the text value of the editor on change.
@@ -12,13 +14,11 @@ const handleChange = onChange => (value, delta, source, editor) => {
     const text = editor.getText();
 
     // Fix bug with auto-trimming on change by not triggering event when space
-    // is typed.
-    if (!text.endsWith(' \n')) {
-        onChange(editor.getText());
+    // is typed. Still isn't quite right for newlines :-(
+    if (!HAS_TRAILING_WHITESPACE.test(text)) {
+        onChange(text);
     }
 };
-
-const withValue = cb => e => cb(e.target.value);
 
 const MessageEditor = ({
     locales,
@@ -43,7 +43,7 @@ const MessageEditor = ({
             onChange: handleChange(setMessage)
         }),
         h('pre', [
-            h('code', rendered)
+            h('code', rendered || ' ')
         ]),
         h('label.u-pull-right', [
             'Locale: ',
