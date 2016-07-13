@@ -7,6 +7,7 @@ import { messageVariablesVisitor } from './compiler/visitors';
 
 const getMessage = R.prop('message');
 const getLocale = R.prop('renderLocale');
+const getContext = R.prop('context');
 
 /**
  * Extract variable names from current message.
@@ -29,11 +30,11 @@ export const variables = createSelector(
  * Format the current message/locale combination.
  */
 export const rendered = createSelector(
-    [getMessage, getLocale],
-    (message, locale) => {
+    [getMessage, getLocale, getContext],
+    (message, locale, context) => {
         try {
             const intl = new IntlMessageFormat(message, locale);
-            return intl.format({});
+            return intl.format(context);
         } catch (err) {
             return err.toString();
         }

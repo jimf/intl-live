@@ -41,6 +41,14 @@ test('selectors - rendered', t => {
         },
         {
             state: {
+                message: 'Hello {name}',
+                context: { name: 'Jim' },
+                renderedLocale: 'en-US'
+            },
+            expected: 'Hello Jim'
+        },
+        {
+            state: {
                 message: '{this is a SyntaxError}',
             },
             expected: 'SyntaxError: Expected "," or "}" but "i" found.'
