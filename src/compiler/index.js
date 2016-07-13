@@ -39,6 +39,7 @@ export const traverser = (ast, visitor) => {
             case 'simpleFormat':
             case 'dateFormat':
             case 'timeFormat':
+            case 'numberFormat':
                 break;
 
             case 'pluralFormat':
