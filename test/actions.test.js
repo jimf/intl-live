@@ -10,6 +10,15 @@ test('actions - SET_MESSAGE', t => {
     t.end();
 });
 
+test('actions - SET_CONTEXT_VALUE', t => {
+    t.equal(subject.SET_CONTEXT_VALUE, 'SET_CONTEXT_VALUE');
+    t.deepEqual(subject.setContextValue({ dummy: 'dummy' }), {
+        type: subject.SET_CONTEXT_VALUE,
+        payload: { dummy: 'dummy' }
+    });
+    t.end();
+});
+
 test('actions - SET_RENDER_LOCALE', t => {
     t.equal(subject.SET_RENDER_LOCALE, 'SET_RENDER_LOCALE');
     t.deepEqual(subject.setRenderLocale('dummy'), {
