@@ -38,6 +38,7 @@ const MessageEditor = ({
             key: 'quill',
             theme: 'snow',
             toolbar: false,
+            styles: false,
             formats,
             value: message,
             onChange: handleChange(setMessage)
