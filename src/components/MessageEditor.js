@@ -27,12 +27,12 @@ const MessageEditor = ({
     rendered,
     setMessage,
     setRenderLocale,
-    variables
+    variableNames
 }) => (
     h('div', [
         h('div', [
             h('strong', 'Variables: '),
-            variables.join(', ')
+            variableNames.join(', ')
         ]),
         quill({
             key: 'quill',
@@ -63,7 +63,7 @@ MessageEditor.propTypes = {
     rendered: PropTypes.string.isRequired,
     setMessage: PropTypes.func.isRequired,
     setRenderLocale: PropTypes.func.isRequired,
-    variables: PropTypes.array.isRequired
+    variableNames: PropTypes.array.isRequired
 };
 
 export default MessageEditor;

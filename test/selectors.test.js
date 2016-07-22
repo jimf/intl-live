@@ -1,7 +1,7 @@
 import test from 'tape';
 import * as subject from '../src/selectors';
 
-test('selectors - variables', t => {
+test('selectors - variableNames', t => {
     const cases = [
         {
             state: {
@@ -30,7 +30,7 @@ test('selectors - variables', t => {
     ];
 
     cases.forEach(testcase => {
-        t.deepEqual(subject.variables(testcase.state), testcase.expected);
+        t.deepEqual(subject.variableNames(testcase.state), testcase.expected);
     });
 
     t.end();

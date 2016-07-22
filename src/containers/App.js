@@ -18,7 +18,7 @@ const
 
 class AppContainer extends Component {
     render() {
-        const { variables } = this.props;
+        const { variableNames } = this.props;
 
         return h('div.app.animated.fadeIn', [
             h('div.container', [
@@ -28,7 +28,7 @@ class AppContainer extends Component {
                         tab({ key: 'template-tab' }, 'Template'),
                         tab({
                             key: 'context-tab',
-                            disabled: variables.length === 0
+                            disabled: variableNames.length === 0
                         }, 'Context')
                     ]),
                     tabPanel({ key: 'template-tabpanel' }, [
@@ -49,7 +49,7 @@ class AppContainer extends Component {
 
 const mapStateToProps = state => Object.assign({
     rendered: selectors.rendered(state),
-    variables: selectors.variables(state)
+    variableNames: selectors.variableNames(state)
 }, state);
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 

@@ -6,7 +6,10 @@ export const messageVariablesVisitor = () => {
 
     return {
         argumentElement(node) {
-            variables.push(node.id);
+            variables.push({
+                name: node.id,
+                type: node.format ? node.format.type : null
+            });
         },
         getVariables() {
             return variables;

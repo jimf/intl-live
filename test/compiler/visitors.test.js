@@ -6,11 +6,15 @@ test('visitors.messageVariablesVisitor', t => {
 
     t.deepEqual(subject.getVariables(), []);
 
-    subject.argumentElement({ id: 'foo' });
+    subject.argumentElement({ id: 'foo', format: { type: 'dummyType'} });
     subject.argumentElement({ id: 'bar' });
     subject.argumentElement({ id: 'baz' });
 
-    t.deepEqual(subject.getVariables(), ['foo', 'bar', 'baz']);
+    t.deepEqual(subject.getVariables(), [
+        { name: 'foo', type: 'dummyType' },
+        { name: 'bar', type: null },
+        { name: 'baz', type: null }
+    ]);
 
     t.end();
 });

@@ -12,14 +12,14 @@ const getContext = R.prop('context');
 /**
  * Extract variable names from current message.
  */
-export const variables = createSelector(
+export const variableNames = createSelector(
     getMessage,
     message => {
         const visitor = messageVariablesVisitor();
 
         try {
             traverser(parse(message), visitor);
-            return R.uniq(visitor.getVariables());
+            return R.uniq(R.map(R.prop('name'), visitor.getVariables()));
         } catch (err) {
             return [];
         }

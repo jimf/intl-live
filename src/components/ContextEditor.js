@@ -6,9 +6,9 @@ const handleContextChange = (f, x) => e => f({ [x]: e.target.value });
 const ContextEditor = ({
     context,
     setContextValue,
-    variables
+    variableNames
 }) => (
-    h('div', variables.map(variable => (
+    h('div', variableNames.map(variable => (
         h('label', {
             key: variable
         }, [
@@ -25,7 +25,7 @@ const ContextEditor = ({
 ContextEditor.propTypes = {
     context: PropTypes.object.isRequired,
     setContextValue: PropTypes.func.isRequired,
-    variables: PropTypes.array.isRequired
+    variableNames: PropTypes.array.isRequired
 };
 
 export default ContextEditor;
