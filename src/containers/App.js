@@ -49,6 +49,7 @@ class AppContainer extends Component {
 
 const mapStateToProps = state => Object.assign({
     rendered: selectors.rendered(state),
+    variables: selectors.variables(state),
     variableNames: selectors.variableNames(state)
 }, state);
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

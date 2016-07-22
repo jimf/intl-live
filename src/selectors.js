@@ -10,20 +10,35 @@ const getLocale = R.prop('renderLocale');
 const getContext = R.prop('context');
 
 /**
- * Extract variable names from current message.
+ * Extract variable names and types from current message.
  */
-export const variableNames = createSelector(
+export const variables = createSelector(
     getMessage,
     message => {
         const visitor = messageVariablesVisitor();
 
         try {
             traverser(parse(message), visitor);
-            return R.uniq(R.map(R.prop('name'), visitor.getVariables()));
         } catch (err) {
             return [];
         }
+
+        return R.toPairs(
+            visitor.getVariables().reduce((acc, variable) => (
+                Object.assign(acc, {
+                    [variable.name]: acc[variable.name] || variable.type
+                })
+            ), {})
+        );
     }
+);
+
+/**
+ * Extract variable names from current message.
+ */
+export const variableNames = createSelector(
+    variables,
+    R.map(R.head)
 );
 
 /**

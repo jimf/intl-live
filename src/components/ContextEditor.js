@@ -3,21 +3,32 @@ import h from 'react-hyperscript';
 
 const handleContextChange = (f, x) => e => f({ [x]: e.target.value });
 
+const renderInput = (name, type, context, setContextValue) => {
+    let element = 'input.variable-input',
+        inputType = 'text';
+
+    if (['numberFormat', 'pluralFormat'].includes(type)) {
+        inputType = 'number';
+    }
+
+    return h(element, {
+        type: inputType,
+        value: context[name] || '',
+        onChange: handleContextChange(setContextValue, name)
+    });
+};
+
 const ContextEditor = ({
     context,
     setContextValue,
-    variableNames
+    variables
 }) => (
-    h('div', variableNames.map(variable => (
+    h('div', variables.map(([name, type]) => (
         h('label', {
-            key: variable
+            key: name
         }, [
-            `${variable}: `,
-            h('input', {
-                type: 'text',
-                value: context[variable] || '',
-                onChange: handleContextChange(setContextValue, variable)
-            })
+            h('span.variable-label', `${name}: `),
+            renderInput(name, type, context, setContextValue)
         ])
     )))
 );
@@ -25,7 +36,7 @@ const ContextEditor = ({
 ContextEditor.propTypes = {
     context: PropTypes.object.isRequired,
     setContextValue: PropTypes.func.isRequired,
-    variableNames: PropTypes.array.isRequired
+    variables: PropTypes.array.isRequired
 };
 
 export default ContextEditor;

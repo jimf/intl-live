@@ -36,6 +36,41 @@ test('selectors - variableNames', t => {
     t.end();
 });
 
+test('selectors - variables', t => {
+    const cases = [
+        {
+            state: {
+                message: 'Hello world'
+            },
+            expected: []
+        },
+        {
+            state: {
+                message: 'Hello, {name}'
+            },
+            expected: [['name', null]]
+        },
+        {
+            state: {
+                message: '{this is a SyntaxError}'
+            },
+            expected: []
+        },
+        {
+            state: {
+                message: '{count} {count, plural, one {item} other {items} }'
+            },
+            expected: [['count', 'pluralFormat']]
+        }
+    ];
+
+    cases.forEach(testcase => {
+        t.deepEqual(subject.variables(testcase.state), testcase.expected);
+    });
+
+    t.end();
+});
+
 test('selectors - rendered', t => {
     const cases = [
         {
