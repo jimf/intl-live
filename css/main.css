@@ -6,6 +6,15 @@
     text-align: center;
 }
 
+.variable-label {
+    display: block;
+}
+
+.variable-input {
+    margin-bottom: 15px;
+    width: 50%;
+}
+
 .ql-container {
     padding: 12px 0;
 }
