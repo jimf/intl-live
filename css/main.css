@@ -30,3 +30,16 @@
     border-color: #33c3f0;
     outline: 0;
 }
+
+.intl-toolbar {
+    margin-left: 3px;
+}
+
+.intl-toolbar button {
+    border-radius: 0;
+    margin-left: -1px;
+    margin-bottom: -1px;
+}
+.ql-container {
+    padding-top: 0 !important;
+}

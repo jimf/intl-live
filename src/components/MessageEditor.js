@@ -1,6 +1,6 @@
 import h from 'react-hyperscript';
 import { createFactory, PropTypes } from 'react';
-import Quill from 'react-quill';
+import Quill from './QuillIntl';
 import { withValue } from '../util';
 
 const quill = createFactory(Quill);
