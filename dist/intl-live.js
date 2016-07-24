@@ -52227,7 +52227,10 @@ var messageVariablesVisitor = exports.messageVariablesVisitor = function message
 
     return {
         argumentElement: function argumentElement(node) {
-            variables.push(node.id);
+            variables.push({
+                name: node.id,
+                type: node.format ? node.format.type : null
+            });
         },
         getVariables: function getVariables() {
             return variables;
@@ -52241,6 +52244,8 @@ var messageVariablesVisitor = exports.messageVariablesVisitor = function message
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _react = require('react');
 
@@ -52258,18 +52263,37 @@ var handleContextChange = function handleContextChange(f, x) {
     };
 };
 
+var renderInput = function renderInput(name, type, context, setContextValue) {
+    var element = 'input.variable-input';
+    var inputType = 'text';
+
+    if (['numberFormat', 'pluralFormat'].includes(type)) {
+        inputType = 'number';
+    } else if (type === 'dateFormat') {
+        inputType = 'date';
+    } else if (type === 'timeFormat') {
+        inputType = 'time';
+    }
+
+    return (0, _reactHyperscript2.default)(element, {
+        type: inputType,
+        value: context[name] || '',
+        onChange: handleContextChange(setContextValue, name)
+    });
+};
+
 var ContextEditor = function ContextEditor(_ref) {
     var context = _ref.context;
     var setContextValue = _ref.setContextValue;
     var variables = _ref.variables;
-    return (0, _reactHyperscript2.default)('div', variables.map(function (variable) {
+    return (0, _reactHyperscript2.default)('div', variables.map(function (_ref2) {
+        var _ref3 = _slicedToArray(_ref2, 2);
+
+        var name = _ref3[0];
+        var type = _ref3[1];
         return (0, _reactHyperscript2.default)('label', {
-            key: variable
-        }, [variable + ': ', (0, _reactHyperscript2.default)('input', {
-            type: 'text',
-            value: context[variable] || '',
-            onChange: handleContextChange(setContextValue, variable)
-        })]);
+            key: name
+        }, [(0, _reactHyperscript2.default)('span.variable-label', name + ': '), renderInput(name, type, context, setContextValue)]);
     }));
 };
 
@@ -52294,15 +52318,15 @@ var _reactHyperscript2 = _interopRequireDefault(_reactHyperscript);
 
 var _react = require('react');
 
-var _reactQuill = require('react-quill');
+var _QuillIntl = require('./QuillIntl');
 
-var _reactQuill2 = _interopRequireDefault(_reactQuill);
+var _QuillIntl2 = _interopRequireDefault(_QuillIntl);
 
 var _util = require('../util');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var quill = (0, _react.createFactory)(_reactQuill2.default);
+var quill = (0, _react.createFactory)(_QuillIntl2.default);
 var formats = [];
 var HAS_TRAILING_WHITESPACE = /[ \n\r]\n$/;
 
@@ -52328,8 +52352,8 @@ var MessageEditor = function MessageEditor(_ref) {
     var rendered = _ref.rendered;
     var setMessage = _ref.setMessage;
     var setRenderLocale = _ref.setRenderLocale;
-    var variables = _ref.variables;
-    return (0, _reactHyperscript2.default)('div', [(0, _reactHyperscript2.default)('div', [(0, _reactHyperscript2.default)('strong', 'Variables: '), variables.join(', ')]), quill({
+    var variableNames = _ref.variableNames;
+    return (0, _reactHyperscript2.default)('div', [(0, _reactHyperscript2.default)('div', [(0, _reactHyperscript2.default)('strong', 'Variables: '), variableNames.join(', ')]), quill({
         key: 'quill',
         theme: 'snow',
         toolbar: false,
@@ -52352,12 +52376,83 @@ MessageEditor.propTypes = {
     rendered: _react.PropTypes.string.isRequired,
     setMessage: _react.PropTypes.func.isRequired,
     setRenderLocale: _react.PropTypes.func.isRequired,
-    variables: _react.PropTypes.array.isRequired
+    variableNames: _react.PropTypes.array.isRequired
 };
 
 exports.default = MessageEditor;
 
-},{"../util":540,"react":512,"react-hyperscript":348,"react-quill":350}],536:[function(require,module,exports){
+},{"../util":542,"./QuillIntl":536,"react":512,"react-hyperscript":348}],536:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _reactHyperscript = require('react-hyperscript');
+
+var _reactHyperscript2 = _interopRequireDefault(_reactHyperscript);
+
+var _reactQuill = require('react-quill');
+
+var _reactQuill2 = _interopRequireDefault(_reactQuill);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var quill = (0, _react.createFactory)(_reactQuill2.default);
+
+var QuillIntl = function (_Component) {
+    _inherits(QuillIntl, _Component);
+
+    function QuillIntl() {
+        _classCallCheck(this, QuillIntl);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(QuillIntl).apply(this, arguments));
+    }
+
+    _createClass(QuillIntl, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            setTimeout(function () {
+                _this2.quill.state.editor.addModule('intlToolbar', {
+                    container: _this2.toolbar
+                });
+            }, 0);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            return (0, _reactHyperscript2.default)('div', [(0, _reactHyperscript2.default)('div.intl-toolbar', {
+                ref: function ref(el) {
+                    _this3.toolbar = el;
+                }
+            }), quill(Object.assign({
+                ref: function ref(el) {
+                    _this3.quill = el;
+                }
+            }, this.props))]);
+        }
+    }]);
+
+    return QuillIntl;
+}(_react.Component);
+
+exports.default = QuillIntl;
+
+},{"react":512,"react-hyperscript":348,"react-quill":350}],537:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -52423,12 +52518,12 @@ var AppContainer = function (_Component) {
     _createClass(AppContainer, [{
         key: 'render',
         value: function render() {
-            var variables = this.props.variables;
+            var variableNames = this.props.variableNames;
 
 
             return (0, _reactHyperscript2.default)('div.app.animated.fadeIn', [(0, _reactHyperscript2.default)('div.container', [(0, _reactHyperscript2.default)('h1.header', 'Intl Live'), tabs(null, [tabList({ key: 'tablist' }, [tab({ key: 'template-tab' }, 'Template'), tab({
                 key: 'context-tab',
-                disabled: variables.length === 0
+                disabled: variableNames.length === 0
             }, 'Context')]), tabPanel({ key: 'template-tabpanel' }, [messageEditor(Object.assign({
                 key: 'message-editor'
             }, this.props))]), tabPanel({ key: 'context-tabpanel' }, [contextEditor(Object.assign({
@@ -52443,7 +52538,8 @@ var AppContainer = function (_Component) {
 var mapStateToProps = function mapStateToProps(state) {
     return Object.assign({
         rendered: selectors.rendered(state),
-        variables: selectors.variables(state)
+        variables: selectors.variables(state),
+        variableNames: selectors.variableNames(state)
     }, state);
 };
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
@@ -52452,7 +52548,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AppContainer);
 
-},{"../actions":531,"../components/ContextEditor":534,"../components/MessageEditor":535,"../selectors":539,"react":512,"react-hyperscript":348,"react-redux":355,"react-tabs":367,"redux":524}],537:[function(require,module,exports){
+},{"../actions":531,"../components/ContextEditor":534,"../components/MessageEditor":535,"../selectors":541,"react":512,"react-hyperscript":348,"react-redux":355,"react-tabs":367,"redux":524}],538:[function(require,module,exports){
 'use strict';
 
 require('babel-polyfill');
@@ -52469,6 +52565,8 @@ var _reactRedux = require('react-redux');
 
 var _redux = require('redux');
 
+var _reactQuill = require('react-quill');
+
 var _reducers = require('./reducers');
 
 var _reducers2 = _interopRequireDefault(_reducers);
@@ -52477,8 +52575,13 @@ var _app = require('./containers/app');
 
 var _app2 = _interopRequireDefault(_app);
 
+var _quill = require('./quill.intl-toolbar');
+
+var _quill2 = _interopRequireDefault(_quill);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+_reactQuill.Quill.registerModule('intlToolbar', (0, _quill2.default)(document));
 var provider = (0, _react.createFactory)(_reactRedux.Provider);
 var appContainer = (0, _react.createFactory)(_app2.default);
 
@@ -52488,7 +52591,64 @@ var appContainer = (0, _react.createFactory)(_app2.default);
     }, (0, _redux.createStore)(_reducers2.default))
 }, appContainer()), document.getElementById('app'));
 
-},{"./containers/app":536,"./reducers":538,"babel-polyfill":1,"ramda":345,"react":512,"react-dom":346,"react-redux":355,"redux":524}],538:[function(require,module,exports){
+},{"./containers/app":537,"./quill.intl-toolbar":539,"./reducers":540,"babel-polyfill":1,"ramda":345,"react":512,"react-dom":346,"react-quill":350,"react-redux":355,"redux":524}],539:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function (doc) {
+    var typeMap = {
+        number: '{foo, number}',
+        date: '{foo, date, medium}',
+        time: '{foo, time, medium}',
+        select: '\n            {foo, select,\n                foo {Foo}\n                bar {Bar}\n                other {Baz}\n            }'.trim(),
+        plural: '\n            {foo, plural,\n                =0 {no foos}\n                one {# foo}\n                other {# foos}\n            }'.trim(),
+        selectordinal: '\n            {foo, selectordinal,\n                one {#st}\n                two {#nd}\n                few {#rd}\n                other {#th}\n            }'.trim()
+    };
+
+    var addButton = function addButton(container, type) {
+        var button = doc.createElement('button');
+        button.setAttribute('type', 'button');
+        button.setAttribute('data-type', type);
+        button.innerHTML = type;
+        button.classList.add('ql-' + type);
+        button.value = type;
+        container.appendChild(button);
+    };
+
+    var addControls = function addControls(container) {
+        ['number', 'date', 'time', 'select', 'plural', 'selectordinal'].forEach(function (type) {
+            addButton(container, type);
+        });
+    };
+
+    var bindEvents = function bindEvents(container, quill) {
+        var buttons = Array.from(container.querySelectorAll('button'));
+        buttons.forEach(function (button) {
+            var type = button.getAttribute('data-type'),
+                text = typeMap[type];
+
+            button.addEventListener('click', function () {
+                quill.focus();
+                var range = quill.getSelection();
+                quill.updateContents({
+                    ops: [{ retain: range.start }, { delete: range.end - range.start }, { insert: text }]
+                });
+            });
+        });
+    };
+
+    return function (quill, options) {
+        var container = typeof options.container === 'string' ? document.querySelector(options.container) : options.container;
+
+        addControls(container);
+        bindEvents(container, quill);
+    };
+};
+
+},{}],540:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -52543,13 +52703,15 @@ var appReducer = function appReducer() {
 
 exports.default = appReducer;
 
-},{"./actions":531,"ramda":345}],539:[function(require,module,exports){
+},{"./actions":531,"ramda":345}],541:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.rendered = exports.variables = undefined;
+exports.rendered = exports.variableNames = exports.variables = undefined;
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _ramda = require('ramda');
 
@@ -52567,48 +52729,120 @@ var _compiler = require('./compiler');
 
 var _visitors = require('./compiler/visitors');
 
+var _util = require('./util');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var getMessage = _ramda2.default.prop('message');
 var getLocale = _ramda2.default.prop('renderLocale');
 var getContext = _ramda2.default.prop('context');
 
 /**
- * Extract variable names from current message.
+ * Extract variable names and types from current message.
  */
 var variables = exports.variables = (0, _reselect.createSelector)(getMessage, function (message) {
     var visitor = (0, _visitors.messageVariablesVisitor)();
 
     try {
         (0, _compiler.traverser)((0, _intlMessageformatParser.parse)(message), visitor);
-        return _ramda2.default.uniq(visitor.getVariables());
     } catch (err) {
         return [];
     }
+
+    return _ramda2.default.toPairs(visitor.getVariables().reduce(function (acc, variable) {
+        return Object.assign(acc, _defineProperty({}, variable.name, acc[variable.name] || variable.type));
+    }, {}));
 });
+
+/**
+ * Extract variable names from current message.
+ */
+var variableNames = exports.variableNames = (0, _reselect.createSelector)(variables, _ramda2.default.map(_ramda2.default.head));
+
+var contextTransform = {
+    dateFormat: _util.parseDateString,
+    timeFormat: _util.parseTimeString,
+    numberFormat: _ramda2.default.defaultTo(0),
+    pluralFormat: _ramda2.default.defaultTo(0)
+};
+
+var computeContext = function computeContext(variables, context) {
+    return variables.reduce(function (acc, _ref) {
+        var _ref2 = _slicedToArray(_ref, 2);
+
+        var name = _ref2[0];
+        var type = _ref2[1];
+
+        if (type === null && context[name] === undefined) {
+            return acc;
+        }
+
+        var transform = contextTransform[type] || _ramda2.default.identity;
+        return Object.assign(acc, _defineProperty({}, name, transform(context[name])));
+    }, {});
+};
 
 /**
  * Format the current message/locale combination.
  */
-var rendered = exports.rendered = (0, _reselect.createSelector)([getMessage, getLocale, getContext], function (message, locale, context) {
+var rendered = exports.rendered = (0, _reselect.createSelector)([getMessage, getLocale, getContext, variables], function (message, locale, context, variables) {
     try {
         var intl = new _intlMessageformat2.default(message, locale);
-        return intl.format(context);
+        return intl.format(computeContext(variables, context));
     } catch (err) {
         return err.toString();
     }
 });
 
-},{"./compiler":532,"./compiler/visitors":533,"intl-messageformat":328,"intl-messageformat-parser":326,"ramda":345,"reselect":527}],540:[function(require,module,exports){
+},{"./compiler":532,"./compiler/visitors":533,"./util":542,"intl-messageformat":328,"intl-messageformat-parser":326,"ramda":345,"reselect":527}],542:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var withValue = exports.withValue = function withValue(f) {
-  return function (e) {
-    return f(e.target.value);
-  };
+    return function (e) {
+        return f(e.target.value);
+    };
 };
 
-},{}]},{},[537]);
+var DATE_PATTERN = /^(\d\d\d\d)-(\d\d)-(\d\d)$/;
+var parseDateString = exports.parseDateString = function parseDateString(dateString) {
+    var match = DATE_PATTERN.exec(dateString);
+
+    if (match === null) {
+        return undefined;
+    }
+
+    var _match = _slicedToArray(match, 4);
+
+    var /* unused */y = _match[1];
+    var M = _match[2];
+    var d = _match[3];
+
+    return new Date(parseInt(y, 10), parseInt(M, 10) - 1, parseInt(d, 10)).getTime();
+};
+
+var TIME_PATTERN = /^(\d\d):(\d\d)$/;
+var parseTimeString = exports.parseTimeString = function parseTimeString(timeString) {
+    var match = TIME_PATTERN.exec(timeString);
+
+    if (match === null) {
+        return undefined;
+    }
+
+    var _match2 = _slicedToArray(match, 3);
+
+    var /* unused */h = _match2[1];
+    var m = _match2[2];
+
+    var now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h, 10), parseInt(m, 10)).getTime();
+};
+
+},{}]},{},[538]);
