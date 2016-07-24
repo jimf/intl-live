@@ -4,6 +4,7 @@ import IntlMessageFormat from 'intl-messageformat';
 import { parse } from 'intl-messageformat-parser';
 import { traverser } from './compiler';
 import { messageVariablesVisitor } from './compiler/visitors';
+import { parseDateString, parseTimeString } from './util';
 
 const getMessage = R.prop('message');
 const getLocale = R.prop('renderLocale');
@@ -41,15 +42,33 @@ export const variableNames = createSelector(
     R.map(R.head)
 );
 
+const contextTransform = {
+    dateFormat: parseDateString,
+    timeFormat: parseTimeString,
+    numberFormat: R.defaultTo(0),
+    pluralFormat: R.defaultTo(0)
+};
+
+const computeContext = (variables, context) => (
+    variables.reduce((acc, [name, type]) => {
+        if (type === null && context[name] === undefined) {
+            return acc;
+        }
+
+        const transform = contextTransform[type] || R.identity;
+        return Object.assign(acc, { [name]: transform(context[name]) });
+    }, {})
+);
+
 /**
  * Format the current message/locale combination.
  */
 export const rendered = createSelector(
-    [getMessage, getLocale, getContext],
-    (message, locale, context) => {
+    [getMessage, getLocale, getContext, variables],
+    (message, locale, context, variables) => {
         try {
             const intl = new IntlMessageFormat(message, locale);
-            return intl.format(context);
+            return intl.format(computeContext(variables, context));
         } catch (err) {
             return err.toString();
         }

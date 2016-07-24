@@ -4,11 +4,15 @@ import h from 'react-hyperscript';
 const handleContextChange = (f, x) => e => f({ [x]: e.target.value });
 
 const renderInput = (name, type, context, setContextValue) => {
-    let element = 'input.variable-input',
-        inputType = 'text';
+    const element = 'input.variable-input';
+    let inputType = 'text';
 
     if (['numberFormat', 'pluralFormat'].includes(type)) {
         inputType = 'number';
+    } else if (type === 'dateFormat') {
+        inputType = 'date';
+    } else if (type === 'timeFormat') {
+        inputType = 'time';
     }
 
     return h(element, {
