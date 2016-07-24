@@ -64,7 +64,6 @@ export default function(doc) {
                         { insert: text }
                     ]
                 });
-                // quill.insertText(0, text);
             });
         });
     };
