@@ -52113,7 +52113,7 @@ function parseTag(tag, props) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setRenderLocale = exports.SET_RENDER_LOCALE = exports.setContextValue = exports.SET_CONTEXT_VALUE = exports.setMessage = exports.SET_MESSAGE = undefined;
+exports.setRenderLocale = exports.SET_RENDER_LOCALE = exports.setFormats = exports.SET_FORMATS = exports.setContextValue = exports.SET_CONTEXT_VALUE = exports.setMessage = exports.SET_MESSAGE = undefined;
 
 var _reduxActions = require('redux-actions');
 
@@ -52128,6 +52128,12 @@ var setMessage = exports.setMessage = (0, _reduxActions.createAction)(SET_MESSAG
  */
 var SET_CONTEXT_VALUE = exports.SET_CONTEXT_VALUE = 'SET_CONTEXT_VALUE';
 var setContextValue = exports.setContextValue = (0, _reduxActions.createAction)(SET_CONTEXT_VALUE);
+
+/**
+ * Set value for custom formats.
+ */
+var SET_FORMATS = exports.SET_FORMATS = 'SET_FORMATS';
+var setFormats = exports.setFormats = (0, _reduxActions.createAction)(SET_FORMATS);
 
 /**
  * Locale to render the message in.
@@ -52312,6 +52318,42 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _react = require('react');
+
+var _reactHyperscript = require('react-hyperscript');
+
+var _reactHyperscript2 = _interopRequireDefault(_reactHyperscript);
+
+var _util = require('../util');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var EXAMPLE = '{\n  "number": {\n    "usd": { "style": "currency", "currency": "USD" }\n  }\n}';
+
+var FormatsEditor = function FormatsEditor(_ref) {
+    var formats = _ref.formats;
+    var setFormats = _ref.setFormats;
+    return (0, _reactHyperscript2.default)('div', [(0, _reactHyperscript2.default)('div.row', [(0, _reactHyperscript2.default)('div.column.one-half', [(0, _reactHyperscript2.default)('h5', 'Define custom formats'), (0, _reactHyperscript2.default)('textarea.formats-editor.u-full-width', {
+        value: formats,
+        onChange: (0, _util.withValue)(setFormats),
+        rows: 5
+    })]), (0, _reactHyperscript2.default)('div.column.one-half', [(0, _reactHyperscript2.default)('h5', 'Example'), (0, _reactHyperscript2.default)('pre', [(0, _reactHyperscript2.default)('code', EXAMPLE)])])])]);
+};
+
+FormatsEditor.propTypes = {
+    formats: _react.PropTypes.string.isRequired,
+    setFormats: _react.PropTypes.func.isRequired
+};
+
+exports.default = FormatsEditor;
+
+},{"../util":543,"react":512,"react-hyperscript":348}],536:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _reactHyperscript = require('react-hyperscript');
 
 var _reactHyperscript2 = _interopRequireDefault(_reactHyperscript);
@@ -52377,7 +52419,7 @@ MessageEditor.propTypes = {
 
 exports.default = MessageEditor;
 
-},{"../util":542,"./QuillIntl":536,"react":512,"react-hyperscript":348}],536:[function(require,module,exports){
+},{"../util":543,"./QuillIntl":537,"react":512,"react-hyperscript":348}],537:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -52448,7 +52490,7 @@ var QuillIntl = function (_Component) {
 
 exports.default = QuillIntl;
 
-},{"react":512,"react-hyperscript":348,"react-quill":350}],537:[function(require,module,exports){
+},{"react":512,"react-hyperscript":348,"react-quill":350}],538:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -52477,6 +52519,10 @@ var _ContextEditor = require('../components/ContextEditor');
 
 var _ContextEditor2 = _interopRequireDefault(_ContextEditor);
 
+var _FormatsEditor = require('../components/FormatsEditor');
+
+var _FormatsEditor2 = _interopRequireDefault(_FormatsEditor);
+
 var _actions = require('../actions');
 
 var actions = _interopRequireWildcard(_actions);
@@ -52500,7 +52546,8 @@ var tab = (0, _react.createFactory)(_reactTabs.Tab),
     tabList = (0, _react.createFactory)(_reactTabs.TabList),
     tabPanel = (0, _react.createFactory)(_reactTabs.TabPanel),
     messageEditor = (0, _react.createFactory)(_MessageEditor2.default),
-    contextEditor = (0, _react.createFactory)(_ContextEditor2.default);
+    contextEditor = (0, _react.createFactory)(_ContextEditor2.default),
+    formatsEditor = (0, _react.createFactory)(_FormatsEditor2.default);
 
 var AppContainer = function (_Component) {
     _inherits(AppContainer, _Component);
@@ -52520,10 +52567,14 @@ var AppContainer = function (_Component) {
             return (0, _reactHyperscript2.default)('div.app.animated.fadeIn', [(0, _reactHyperscript2.default)('div.container', [(0, _reactHyperscript2.default)('h1.header', 'Intl Live'), tabs(null, [tabList({ key: 'tablist' }, [tab({ key: 'template-tab' }, 'Template'), tab({
                 key: 'context-tab',
                 disabled: variableNames.length === 0
-            }, 'Context')]), tabPanel({ key: 'template-tabpanel' }, [messageEditor(Object.assign({
+            }, 'Context'), tab({
+                key: 'formats-tab'
+            }, 'Formats')]), tabPanel({ key: 'template-tabpanel' }, [messageEditor(Object.assign({
                 key: 'message-editor'
             }, this.props))]), tabPanel({ key: 'context-tabpanel' }, [contextEditor(Object.assign({
                 key: 'context-editor'
+            }, this.props))]), tabPanel({ key: 'formats-tabpanel' }, [formatsEditor(Object.assign({
+                key: 'formats-editor'
             }, this.props))])])])]);
         }
     }]);
@@ -52544,7 +52595,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AppContainer);
 
-},{"../actions":531,"../components/ContextEditor":534,"../components/MessageEditor":535,"../selectors":541,"react":512,"react-hyperscript":348,"react-redux":355,"react-tabs":367,"redux":524}],538:[function(require,module,exports){
+},{"../actions":531,"../components/ContextEditor":534,"../components/FormatsEditor":535,"../components/MessageEditor":536,"../selectors":542,"react":512,"react-hyperscript":348,"react-redux":355,"react-tabs":367,"redux":524}],539:[function(require,module,exports){
 'use strict';
 
 require('babel-polyfill');
@@ -52587,7 +52638,7 @@ var appContainer = (0, _react.createFactory)(_app2.default);
     }, (0, _redux.createStore)(_reducers2.default))
 }, appContainer()), document.getElementById('app'));
 
-},{"./containers/app":537,"./quill.intl-toolbar":539,"./reducers":540,"babel-polyfill":1,"ramda":345,"react":512,"react-dom":346,"react-quill":350,"react-redux":355,"redux":524}],539:[function(require,module,exports){
+},{"./containers/app":538,"./quill.intl-toolbar":540,"./reducers":541,"babel-polyfill":1,"ramda":345,"react":512,"react-dom":346,"react-quill":350,"react-redux":355,"redux":524}],540:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -52650,7 +52701,7 @@ var PLURAL = '\n{foo, plural,\n    =0 {no foos}\n    one {# foo}\n    other {# f
 
 var SELECTORDINAL = '\n{foo, selectordinal,\n    one {#st}\n    two {#nd}\n    few {#rd}\n    other {#th}\n}'.trim();
 
-},{}],540:[function(require,module,exports){
+},{}],541:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -52674,6 +52725,7 @@ var initialState = function initialState() {
         message: '',
         htmlMessage: '',
         context: {},
+        formats: '{}',
         renderLocale: 'en-US',
         locales: ['cs-CZ', 'en-US', 'es-AR', 'fr-FR', 'ja-JP', 'pt-BR']
     };
@@ -52691,8 +52743,13 @@ reducers[actions.SET_CONTEXT_VALUE] = function (state, _ref2) {
     return _ramda2.default.evolve({ context: _ramda2.default.flip(_ramda2.default.merge)(payload) })(state);
 };
 
-reducers[actions.SET_RENDER_LOCALE] = function (state, _ref3) {
+reducers[actions.SET_FORMATS] = function (state, _ref3) {
     var payload = _ref3.payload;
+    return _ramda2.default.assoc('formats', payload, state);
+};
+
+reducers[actions.SET_RENDER_LOCALE] = function (state, _ref4) {
+    var payload = _ref4.payload;
     return _ramda2.default.assoc('renderLocale', payload, state);
 };
 
@@ -52706,7 +52763,7 @@ var appReducer = function appReducer() {
 
 exports.default = appReducer;
 
-},{"./actions":531,"ramda":345}],541:[function(require,module,exports){
+},{"./actions":531,"ramda":345}],542:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -52741,6 +52798,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var getMessage = _ramda2.default.prop('message');
 var getLocale = _ramda2.default.prop('renderLocale');
 var getContext = _ramda2.default.prop('context');
+var getFormats = _ramda2.default.prop('formats');
 
 /**
  * Extract variable names and types from current message.
@@ -52790,16 +52848,23 @@ var computeContext = function computeContext(variables, context) {
 /**
  * Format the current message/locale combination.
  */
-var rendered = exports.rendered = (0, _reselect.createSelector)([getMessage, getLocale, getContext, variables], function (message, locale, context, variables) {
+var rendered = exports.rendered = (0, _reselect.createSelector)([getMessage, getLocale, getContext, getFormats, variables], function (message, locale, context, formats, variables) {
+    var parsedFormats = void 0;
     try {
-        var intl = new _intlMessageformat2.default(message, locale);
+        parsedFormats = JSON.parse(formats);
+    } catch (err) {
+        return 'Formats: ' + err.toString();
+    }
+
+    try {
+        var intl = new _intlMessageformat2.default(message, locale, parsedFormats);
         return intl.format(computeContext(variables, context));
     } catch (err) {
         return err.toString();
     }
 });
 
-},{"./compiler":532,"./compiler/visitors":533,"./util":542,"intl-messageformat":328,"intl-messageformat-parser":326,"ramda":345,"reselect":527}],542:[function(require,module,exports){
+},{"./compiler":532,"./compiler/visitors":533,"./util":543,"intl-messageformat":328,"intl-messageformat-parser":326,"ramda":345,"reselect":527}],543:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -52848,4 +52913,4 @@ var parseTimeString = exports.parseTimeString = function parseTimeString(timeStr
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h, 10), parseInt(m, 10)).getTime();
 };
 
-},{}]},{},[538]);
+},{}]},{},[539]);
