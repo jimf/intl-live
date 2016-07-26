@@ -1,10 +1,15 @@
 import R from 'ramda';
 import { createSelector } from 'reselect';
-import IntlMessageFormat from 'intl-messageformat';
 import { parse } from 'intl-messageformat-parser';
 import { traverser } from './compiler';
 import { messageVariablesVisitor } from './compiler/visitors';
-import { parseDateString, parseTimeString } from './util';
+import {
+    parseDateString,
+    parseTimeString,
+    parseFormats,
+    compileMessage,
+    formatMessage
+} from './util';
 
 const getMessage = R.prop('message');
 const getLocale = R.prop('renderLocale');
@@ -66,19 +71,10 @@ const computeContext = (variables, context) => (
  */
 export const rendered = createSelector(
     [getMessage, getLocale, getContext, getFormats, variables],
-    (message, locale, context, formats, variables) => {
-        let parsedFormats;
-        try {
-            parsedFormats = JSON.parse(formats);
-        } catch (err) {
-            return `Formats: ${err.toString()}`;
-        }
-
-        try {
-            const intl = new IntlMessageFormat(message, locale, parsedFormats);
-            return intl.format(computeContext(variables, context));
-        } catch (err) {
-            return err.toString();
-        }
-    }
+    (message, locale, context, formats, variables) => (
+        parseFormats(formats)
+            .chain(compileMessage(message, locale))
+            .chain(formatMessage(computeContext(variables, context)))
+            .cata({ Left: R.identity, Right: R.identity })
+    )
 );

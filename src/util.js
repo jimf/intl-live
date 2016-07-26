@@ -1,3 +1,9 @@
+import R from 'ramda';
+import Either from 'data.either';
+import IntlMessageFormat from 'intl-messageformat';
+
+const { Left, Right } = Either;
+
 export const withValue = f => e => f(e.target.value);
 
 const DATE_PATTERN = /^(\d\d\d\d)-(\d\d)-(\d\d)$/;
@@ -30,3 +36,30 @@ export const parseTimeString = timeString => {
         parseInt(m, 10)
     )).getTime();
 };
+
+// parseFormats :: String -> Either String String
+export const parseFormats = formats => {
+    try {
+        return new Right(JSON.parse(formats));
+    } catch (err) {
+        return new Left(`Formats: ${err.toString()}`);
+    }
+};
+
+// compileMessage :: String -> String -> Object -> Object
+export const compileMessage = R.curry((message, locale, formats) => {
+    try {
+        return new Right(new IntlMessageFormat(message, locale, formats));
+    } catch (err) {
+        return new Left(err.toString());
+    }
+});
+
+// formatMessage :: Object -> Object -> String
+export const formatMessage = R.curry((context, intl) => {
+    try {
+        return new Right(intl.format(context));
+    } catch (err) {
+        return new Left(err.toString());
+    }
+});

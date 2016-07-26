@@ -102,8 +102,8 @@ test('selectors - rendered', t => {
                 message: 'I have {money, number, usd}',
                 context: { money: '5' },
                 formats: `{
-                    "number":{
-                        "usd":{ "style": "currency", "currency": "USD" }
+                    "number": {
+                        "usd": { "style": "currency", "currency": "USD" }
                     }
                 }`,
                 renderedLocale: 'en-US'
