@@ -52328,7 +52328,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var quill = (0, _react.createFactory)(_QuillIntl2.default);
 var formats = [];
-var HAS_TRAILING_WHITESPACE = /[ \n\r]\n$/;
 
 /**
  * Call props change handler with the text value of the editor on change.
@@ -52336,18 +52335,14 @@ var HAS_TRAILING_WHITESPACE = /[ \n\r]\n$/;
 var handleChange = function handleChange(onChange) {
     return function (value, delta, source, editor) {
         var text = editor.getText();
-
-        // Fix bug with auto-trimming on change by not triggering event when space
-        // is typed. Still isn't quite right for newlines :-(
-        if (!HAS_TRAILING_WHITESPACE.test(text)) {
-            onChange(text);
-        }
+        onChange({ text: text, html: value });
     };
 };
 
 var MessageEditor = function MessageEditor(_ref) {
     var locales = _ref.locales;
     var message = _ref.message;
+    var htmlMessage = _ref.htmlMessage;
     var renderLocale = _ref.renderLocale;
     var rendered = _ref.rendered;
     var setMessage = _ref.setMessage;
@@ -52359,7 +52354,7 @@ var MessageEditor = function MessageEditor(_ref) {
         toolbar: false,
         styles: false,
         formats: formats,
-        value: message,
+        value: htmlMessage,
         onChange: handleChange(setMessage)
     }), (0, _reactHyperscript2.default)('pre', [(0, _reactHyperscript2.default)('code', rendered || ' ')]), (0, _reactHyperscript2.default)('label.u-pull-right', ['Locale: ', (0, _reactHyperscript2.default)('select', {
         value: renderLocale,
@@ -52372,6 +52367,7 @@ var MessageEditor = function MessageEditor(_ref) {
 MessageEditor.propTypes = {
     locales: _react.PropTypes.array.isRequired,
     message: _react.PropTypes.string.isRequired,
+    htmlMessage: _react.PropTypes.string.isRequired,
     renderLocale: _react.PropTypes.string.isRequired,
     rendered: _react.PropTypes.string.isRequired,
     setMessage: _react.PropTypes.func.isRequired,
@@ -52603,9 +52599,9 @@ exports.default = function (doc) {
         number: '{foo, number}',
         date: '{foo, date, medium}',
         time: '{foo, time, medium}',
-        select: '\n            {foo, select,\n                foo {Foo}\n                bar {Bar}\n                other {Baz}\n            }'.trim(),
-        plural: '\n            {foo, plural,\n                =0 {no foos}\n                one {# foo}\n                other {# foos}\n            }'.trim(),
-        selectordinal: '\n            {foo, selectordinal,\n                one {#st}\n                two {#nd}\n                few {#rd}\n                other {#th}\n            }'.trim()
+        select: SELECT,
+        plural: PLURAL,
+        selectordinal: SELECTORDINAL
     };
 
     var addButton = function addButton(container, type) {
@@ -52648,6 +52644,12 @@ exports.default = function (doc) {
     };
 };
 
+var SELECT = '\n{foo, select,\n    foo {Foo}\n    bar {Bar}\n    other {Baz}\n}'.trim();
+
+var PLURAL = '\n{foo, plural,\n    =0 {no foos}\n    one {# foo}\n    other {# foos}\n}'.trim();
+
+var SELECTORDINAL = '\n{foo, selectordinal,\n    one {#st}\n    two {#nd}\n    few {#rd}\n    other {#th}\n}'.trim();
+
 },{}],540:[function(require,module,exports){
 'use strict';
 
@@ -52670,6 +52672,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var initialState = function initialState() {
     return {
         message: '',
+        htmlMessage: '',
         context: {},
         renderLocale: 'en-US',
         locales: ['cs-CZ', 'en-US', 'es-AR', 'fr-FR', 'ja-JP', 'pt-BR']
@@ -52680,7 +52683,7 @@ var reducers = {};
 
 reducers[actions.SET_MESSAGE] = function (state, _ref) {
     var payload = _ref.payload;
-    return _ramda2.default.assoc('message', payload, state);
+    return _ramda2.default.compose(_ramda2.default.assoc('message', payload.text), _ramda2.default.assoc('htmlMessage', payload.html))(state);
 };
 
 reducers[actions.SET_CONTEXT_VALUE] = function (state, _ref2) {
