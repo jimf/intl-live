@@ -5,6 +5,7 @@ import subject from '../src/reducers';
 test('reducers - initial state', t => {
     t.deepEqual(subject(undefined, {}), {
         message: '',
+        htmlMessage: '',
         context: {},
         renderLocale: 'en-US',
         locales: [
@@ -21,8 +22,13 @@ test('reducers - initial state', t => {
 
 test('reducers - SET_MESSAGE', t => {
     const state = subject(undefined, {});
-    t.deepEqual(subject(state, actions.setMessage('foo')).message, 'foo',
-        'updates `message` state');
+    const newState = subject(state, actions.setMessage({
+        text: 'foo',
+        html: '<div>foo</div>'
+    }));
+    t.equal(newState.message, 'foo', 'updates `message` state');
+    t.equal(newState.htmlMessage, '<div>foo</div>',
+        'updates `htmlMessage` state');
     t.end();
 });
 

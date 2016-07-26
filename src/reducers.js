@@ -3,6 +3,7 @@ import * as actions from './actions';
 
 const initialState = () => ({
     message: '',
+    htmlMessage: '',
     context: {},
     renderLocale: 'en-US',
     locales: [
@@ -18,7 +19,10 @@ const initialState = () => ({
 const reducers = {};
 
 reducers[actions.SET_MESSAGE] = (state, { payload }) => (
-    R.assoc('message', payload, state)
+    R.compose(
+        R.assoc('message', payload.text),
+        R.assoc('htmlMessage', payload.html)
+    )(state)
 );
 
 reducers[actions.SET_CONTEXT_VALUE] = (state, { payload }) => (

@@ -5,24 +5,19 @@ import { withValue } from '../util';
 
 const quill = createFactory(Quill);
 const formats = [];
-const HAS_TRAILING_WHITESPACE = /[ \n\r]\n$/;
 
 /**
  * Call props change handler with the text value of the editor on change.
  */
 const handleChange = onChange => (value, delta, source, editor) => {
     const text = editor.getText();
-
-    // Fix bug with auto-trimming on change by not triggering event when space
-    // is typed. Still isn't quite right for newlines :-(
-    if (!HAS_TRAILING_WHITESPACE.test(text)) {
-        onChange(text);
-    }
+    onChange({ text, html: value });
 };
 
 const MessageEditor = ({
     locales,
     message,
+    htmlMessage,
     renderLocale,
     rendered,
     setMessage,
@@ -40,7 +35,7 @@ const MessageEditor = ({
             toolbar: false,
             styles: false,
             formats,
-            value: message,
+            value: htmlMessage,
             onChange: handleChange(setMessage)
         }),
         h('pre', [
@@ -59,6 +54,7 @@ const MessageEditor = ({
 MessageEditor.propTypes = {
     locales: PropTypes.array.isRequired,
     message: PropTypes.string.isRequired,
+    htmlMessage: PropTypes.string.isRequired,
     renderLocale: PropTypes.string.isRequired,
     rendered: PropTypes.string.isRequired,
     setMessage: PropTypes.func.isRequired,
