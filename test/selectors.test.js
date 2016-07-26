@@ -96,7 +96,29 @@ test('selectors - rendered', t => {
                 formats: '{}'
             },
             expected: 'SyntaxError: Expected "," or "}" but "i" found.'
-        }
+        },
+        {
+            state: {
+                message: 'I have {money, number, usd}',
+                context: { money: '5' },
+                formats: `{
+                    "number":{
+                        "usd":{ "style": "currency", "currency": "USD" }
+                    }
+                }`,
+                renderedLocale: 'en-US'
+            },
+            expected: 'I have $5.00'
+        },
+        {
+            state: {
+                message: 'I have {money, number, usd}',
+                context: { money: '5' },
+                formats: 'this is a SyntaxError',
+                renderedLocale: 'en-US'
+            },
+            expected: 'Formats: SyntaxError: Unexpected token h'
+        },
     ];
 
     cases.forEach(testcase => {
