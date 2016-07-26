@@ -7,6 +7,7 @@ test('reducers - initial state', t => {
         message: '',
         htmlMessage: '',
         context: {},
+        formats: '{}',
         renderLocale: 'en-US',
         locales: [
             'cs-CZ',
@@ -38,6 +39,15 @@ test('reducers - SET_CONTEXT_VALUE', t => {
         actions.setContextValue({ foo: 'bar' })
     );
     t.deepEqual(state.context, { foo: 'bar' }, 'updates `context` state');
+    t.end();
+});
+
+test('reducers - SET_FORMATS', t => {
+    const state = subject(
+        subject(undefined, {}),
+        actions.setFormats('{ "number": {} }')
+    );
+    t.equal(state.formats, '{ "number": {} }', 'updates `formats` state');
     t.end();
 });
 

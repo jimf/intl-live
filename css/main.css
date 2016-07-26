@@ -15,6 +15,13 @@
     width: 50%;
 }
 
+.formats-editor {
+    font-family: monospace, monospace;
+    font-size: 90%;
+    min-height: 128px;
+    white-space: pre;
+}
+
 .ql-container {
     padding: 12px 0;
 }

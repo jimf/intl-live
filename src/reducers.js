@@ -5,6 +5,7 @@ const initialState = () => ({
     message: '',
     htmlMessage: '',
     context: {},
+    formats: '{}',
     renderLocale: 'en-US',
     locales: [
         'cs-CZ',
@@ -27,6 +28,10 @@ reducers[actions.SET_MESSAGE] = (state, { payload }) => (
 
 reducers[actions.SET_CONTEXT_VALUE] = (state, { payload }) => (
     R.evolve({ context: R.flip(R.merge)(payload) })(state)
+);
+
+reducers[actions.SET_FORMATS] = (state, { payload }) => (
+    R.assoc('formats', payload, state)
 );
 
 reducers[actions.SET_RENDER_LOCALE] = (state, { payload }) => (

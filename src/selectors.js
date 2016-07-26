@@ -9,6 +9,7 @@ import { parseDateString, parseTimeString } from './util';
 const getMessage = R.prop('message');
 const getLocale = R.prop('renderLocale');
 const getContext = R.prop('context');
+const getFormats = R.prop('formats');
 
 /**
  * Extract variable names and types from current message.
@@ -64,10 +65,17 @@ const computeContext = (variables, context) => (
  * Format the current message/locale combination.
  */
 export const rendered = createSelector(
-    [getMessage, getLocale, getContext, variables],
-    (message, locale, context, variables) => {
+    [getMessage, getLocale, getContext, getFormats, variables],
+    (message, locale, context, formats, variables) => {
+        let parsedFormats;
         try {
-            const intl = new IntlMessageFormat(message, locale);
+            parsedFormats = JSON.parse(formats);
+        } catch (err) {
+            return `Formats: ${err.toString()}`;
+        }
+
+        try {
+            const intl = new IntlMessageFormat(message, locale, parsedFormats);
             return intl.format(computeContext(variables, context));
         } catch (err) {
             return err.toString();

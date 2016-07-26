@@ -5,6 +5,7 @@ import h from 'react-hyperscript';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import MessageEditor from '../components/MessageEditor';
 import ContextEditor from '../components/ContextEditor';
+import FormatsEditor from '../components/FormatsEditor';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
 
@@ -14,7 +15,8 @@ const
     tabList = createFactory(TabList),
     tabPanel = createFactory(TabPanel),
     messageEditor = createFactory(MessageEditor),
-    contextEditor = createFactory(ContextEditor);
+    contextEditor = createFactory(ContextEditor),
+    formatsEditor = createFactory(FormatsEditor);
 
 class AppContainer extends Component {
     render() {
@@ -29,7 +31,10 @@ class AppContainer extends Component {
                         tab({
                             key: 'context-tab',
                             disabled: variableNames.length === 0
-                        }, 'Context')
+                        }, 'Context'),
+                        tab({
+                            key: 'formats-tab'
+                        }, 'Formats')
                     ]),
                     tabPanel({ key: 'template-tabpanel' }, [
                         messageEditor(Object.assign({
@@ -39,6 +44,11 @@ class AppContainer extends Component {
                     tabPanel({ key: 'context-tabpanel' }, [
                         contextEditor(Object.assign({
                             key: 'context-editor'
+                        }, this.props))
+                    ]),
+                    tabPanel({ key: 'formats-tabpanel' }, [
+                        formatsEditor(Object.assign({
+                            key: 'formats-editor'
                         }, this.props))
                     ])
                 ])
