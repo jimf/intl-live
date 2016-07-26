@@ -1,27 +1,34 @@
+const SELECT = `
+{foo, select,
+    foo {Foo}
+    bar {Bar}
+    other {Baz}
+}`.trim();
+
+const PLURAL = `
+{foo, plural,
+    =0 {no foos}
+    one {# foo}
+    other {# foos}
+}`.trim();
+
+const SELECTORDINAL = `
+{foo, selectordinal,
+    one {#st}
+    two {#nd}
+    few {#rd}
+    other {#th}
+}`.trim();
+
+
 export default function(doc) {
     const typeMap = {
         number: '{foo, number}',
         date: '{foo, date, medium}',
         time: '{foo, time, medium}',
-        select: `
-            {foo, select,
-                foo {Foo}
-                bar {Bar}
-                other {Baz}
-            }`.trim(),
-        plural: `
-            {foo, plural,
-                =0 {no foos}
-                one {# foo}
-                other {# foos}
-            }`.trim(),
-        selectordinal: `
-            {foo, selectordinal,
-                one {#st}
-                two {#nd}
-                few {#rd}
-                other {#th}
-            }`.trim()
+        select: SELECT,
+        plural: PLURAL,
+        selectordinal: SELECTORDINAL
     };
 
     const addButton = (container, type) => {
