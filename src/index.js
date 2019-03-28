@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-import { createFactory } from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -9,12 +9,11 @@ import AppContainer from './containers/app';
 import intlToolbar from './quill.intl-toolbar';
 
 Quill.registerModule('intlToolbar', intlToolbar(document));
-const provider = createFactory(Provider);
-const appContainer = createFactory(AppContainer);
+const store = createStore(appReducer);
 
 render(
-    provider({
-        store: createStore(appReducer)
-    }, appContainer()),
+    <Provider store={store}>
+        <AppContainer />
+    </Provider>,
     document.getElementById('app')
 );

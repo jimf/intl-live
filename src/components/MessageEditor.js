@@ -1,9 +1,6 @@
-import h from 'react-hyperscript';
-import { createFactory, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import Quill from './QuillIntl';
-import { withValue } from '../util';
 
-const quill = createFactory(Quill);
 const formats = [];
 
 /**
@@ -24,31 +21,31 @@ const MessageEditor = ({
     setRenderLocale,
     variableNames
 }) => (
-    h('div', [
-        h('div', [
-            h('strong', 'Variables: '),
-            variableNames.join(', ')
-        ]),
-        quill({
-            key: 'quill',
-            theme: 'snow',
-            toolbar: false,
-            styles: false,
-            formats,
-            value: htmlMessage,
-            onChange: handleChange(setMessage)
-        }),
-        h('pre', [
-            h('code', rendered || ' ')
-        ]),
-        h('label.u-pull-right', [
-            'Locale: ',
-            h('select', {
-                value: renderLocale,
-                onChange: withValue(setRenderLocale)
-            }, locales.map(locale => h('option', locale)))
-        ])
-    ])
+    <div>
+        <div>
+            <strong>Variables:</strong>
+            {variableNames.join(', ')}
+        </div>
+        <Quill
+            theme="snow"
+            toolbar={false}
+            styles={false}
+            formats={formats}
+            value={htmlMessage}
+            onChange={handleChange(setMessage)}
+        />
+        <pre>
+            <code>{rendered || ' '}</code>
+        </pre>
+        <label className="u-pull-right">
+            Locale:
+            <select value={renderLocale} onChange={e => setRenderLocale(e.target.value)}>
+                {locales.map(locale => (
+                    <option key={locale}>{locale}</option>
+                ))}
+            </select>
+        </label>
+    </div>
 );
 
 MessageEditor.propTypes = {

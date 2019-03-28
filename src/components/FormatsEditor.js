@@ -1,6 +1,4 @@
-import { PropTypes } from 'react';
-import h from 'react-hyperscript';
-import { withValue } from '../util';
+import React, { PropTypes } from 'react';
 
 const EXAMPLE = `{
   "number": {
@@ -9,24 +7,24 @@ const EXAMPLE = `{
 }`;
 
 const FormatsEditor = ({ formats, setFormats }) => (
-    h('div', [
-        h('div.row', [
-            h('div.column.one-half', [
-                h('h5', 'Define custom formats'),
-                h('textarea.formats-editor.u-full-width', {
-                    value: formats,
-                    onChange: withValue(setFormats),
-                    rows: 5
-                })
-            ]),
-            h('div.column.one-half', [
-                h('h5', 'Example'),
-                h('pre', [
-                    h('code', EXAMPLE)
-                ])
-            ])
-        ])
-    ])
+    <div>
+        <div className="row">
+            <div className="column one-half">
+                <h5>Define custom formats</h5>
+                <textarea className="formats-editor u-full-width"
+                    value={formats}
+                    onChange={e => setFormats(e.target.value)}
+                    rows="5"
+                />
+            </div>
+            <div className="column one-half">
+                <h5>Example</h5>
+                <pre>
+                    <code>{EXAMPLE}</code>
+                </pre>
+            </div>
+        </div>
+    </div>
 );
 
 FormatsEditor.propTypes = {

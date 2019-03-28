@@ -1,12 +1,6 @@
 import * as subject from '../src/util';
 
 describe('Util', () => {
-    test('withValue', () => {
-        const e = { target: { value: 'dummy' } };
-        const fn = subject.withValue(x => x);
-        expect(fn(e)).toBe('dummy');
-    });
-
     describe('parseDateString', () => {
         it('should return undefined for invalid input', () => {
             expect(subject.parseDateString('junk')).toBe(undefined);

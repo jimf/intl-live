@@ -1,25 +1,12 @@
+import React from 'react';
 import { PropTypes } from 'react';
-import h from 'react-hyperscript';
 
 const handleContextChange = (f, x) => e => f({ [x]: e.target.value });
-
-const renderInput = (name, type, context, setContextValue) => {
-    const element = 'input.variable-input';
-    let inputType = 'text';
-
-    if (['numberFormat', 'pluralFormat'].includes(type)) {
-        inputType = 'number';
-    } else if (type === 'dateFormat') {
-        inputType = 'date';
-    } else if (type === 'timeFormat') {
-        inputType = 'time';
-    }
-
-    return h(element, {
-        type: inputType,
-        value: context[name] || '',
-        onChange: handleContextChange(setContextValue, name)
-    });
+const inputTypeMap = {
+    numberFormat: 'number',
+    pluralFormat: 'number',
+    dateFormat: 'date',
+    timeFormat: 'time',
 };
 
 const ContextEditor = ({
@@ -27,14 +14,18 @@ const ContextEditor = ({
     setContextValue,
     variables
 }) => (
-    h('div', variables.map(([name, type]) => (
-        h('label', {
-            key: name
-        }, [
-            h('span.variable-label', `${name}: `),
-            renderInput(name, type, context, setContextValue)
-        ])
-    )))
+    <div>
+        {variables.map(([name, type]) => (
+            <label key={name}>
+                <span className="variable-label">{name}</span>
+                <input
+                    type={inputTypeMap[type] || 'text'}
+                    value={context[name] || ''}
+                    onChange={handleContextChange(setContextValue, name)}
+                />
+            </label>
+        ))}
+    </div>
 );
 
 ContextEditor.propTypes = {

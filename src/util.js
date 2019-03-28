@@ -3,8 +3,6 @@ import IntlMessageFormat from 'intl-messageformat';
 
 const { Left, Right } = Either;
 
-export const withValue = f => e => f(e.target.value);
-
 const DATE_PATTERN = /^(\d\d\d\d)-(\d\d)-(\d\d)$/;
 export const parseDateString = dateString => {
     const match = DATE_PATTERN.exec(dateString);
