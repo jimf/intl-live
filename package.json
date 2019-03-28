@@ -11,8 +11,8 @@
   "scripts": {
     "dist": "npm run dist-js && npm run dist-css",
     "dist-css": "uglifycss node_modules/quill/dist/quill.snow.css css/normalize.css css/skeleton.css css/main.css > dist/intl-live.min.css",
-    "dist-js": "browserify src/main.js -o dist/intl-live.js && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
-    "start": "budo src/main.js --live --open",
+    "dist-js": "browserify src/index.js -o dist/intl-live.js && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
+    "start": "budo src/index.js --live --open",
     "test": "jest"
   },
   "babel": {
