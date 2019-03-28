@@ -1,4 +1,3 @@
-import R from 'ramda';
 import { createSelector } from 'reselect';
 import { parse } from 'intl-messageformat-parser';
 import { traverser } from './compiler';
@@ -10,11 +9,16 @@ import {
     compileMessage,
     formatMessage
 } from './util';
+import { selectors } from './state';
 
-const getMessage = R.prop('message');
-const getLocale = R.prop('renderLocale');
-const getContext = R.prop('context');
-const getFormats = R.prop('formats');
+const {
+    getMessage,
+    getLocale,
+    getContext,
+    getFormats,
+} = selectors;
+
+const identity = x => x;
 
 /**
  * Extract variable names and types from current message.
@@ -30,7 +34,7 @@ export const variables = createSelector(
             return [];
         }
 
-        return R.toPairs(
+        return Object.entries(
             visitor.getVariables().reduce((acc, variable) => (
                 Object.assign(acc, {
                     [variable.name]: acc[variable.name] || variable.type
@@ -45,14 +49,14 @@ export const variables = createSelector(
  */
 export const variableNames = createSelector(
     variables,
-    R.map(R.head)
+    vars => vars.map(([head]) => head)
 );
 
 const contextTransform = {
     dateFormat: parseDateString,
     timeFormat: parseTimeString,
-    numberFormat: R.defaultTo(0),
-    pluralFormat: R.defaultTo(0)
+    numberFormat: x => (x == null || isNaN(x)) ? 0 : x,
+    pluralFormat: x => (x == null || isNaN(x)) ? 0 : x,
 };
 
 const computeContext = (variables, context) => (
@@ -61,7 +65,7 @@ const computeContext = (variables, context) => (
             return acc;
         }
 
-        const transform = contextTransform[type] || R.identity;
+        const transform = contextTransform[type] || identity;
         return Object.assign(acc, { [name]: transform(context[name]) });
     }, {})
 );
@@ -75,6 +79,6 @@ export const rendered = createSelector(
         parseFormats(formats)
             .chain(compileMessage(message, locale))
             .chain(formatMessage(computeContext(variables, context)))
-            .cata({ Left: R.identity, Right: R.identity })
+            .cata({ Left: identity, Right: identity })
     )
 );
