@@ -6,7 +6,6 @@
  */
 export const traverser = (ast, visitor) => {
     function traverse(node, parent) {
-        /*jshint maxcomplexity:false*/
         if (Array.isArray(node)) {
             node.forEach(child => {
                 traverse(child, parent);
