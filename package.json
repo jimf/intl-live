@@ -45,7 +45,7 @@
     "react-quill": "github:zenoamaro/react-quill#v0.4.0",
     "react-redux": "^4.4.5",
     "react-tabs": "^0.7.0",
-    "redux": "^3.5.2",
+    "redux": "^4.0.1",
     "reselect": "^2.5.3"
   },
   "devDependencies": {
