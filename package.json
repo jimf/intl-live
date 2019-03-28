@@ -9,11 +9,12 @@
   },
   "private": true,
   "scripts": {
-    "dist": "npm run dist-js && npm run dist-css",
-    "dist-css": "uglifycss node_modules/quill/dist/quill.snow.css css/normalize.css css/skeleton.css css/main.css > dist/intl-live.min.css",
-    "dist-js": "browserify src/index.js -o dist/intl-live.js && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
-    "start": "budo src/index.js --live --open",
-    "test": "jest"
+    "build": "npm run build-js && npm run build-css",
+    "build-css": "uglifycss node_modules/quill/dist/quill.snow.css css/normalize.css css/skeleton.css css/main.css > dist/intl-live.min.css",
+    "build-js": "browserify src/index.js -o dist/intl-live.js && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
+    "deploy": "gh-pages -d dist",
+    "start": "budo src/index.js --live --open --host=localhost",
+    "test": "jest --coverage"
   },
   "babel": {
     "presets": [
@@ -54,6 +55,7 @@
     "@babel/preset-react": "^7.0.0",
     "babelify": "^10.0.0",
     "budo": "^8.3.0",
+    "gh-pages": "^2.0.1",
     "jest": "^24.5.0",
     "uglify-js": "^2.7.0",
     "uglifycss": "0.0.20"
