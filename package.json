@@ -42,7 +42,6 @@
     "quill": "^0.20.1",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
-    "react-hyperscript": "^2.4.0",
     "react-quill": "github:zenoamaro/react-quill#v0.4.0",
     "react-redux": "^4.4.5",
     "react-tabs": "^0.7.0",
@@ -54,10 +53,10 @@
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-react": "^7.0.0",
     "babelify": "^10.0.0",
-    "budo": "^8.3.0",
+    "budo": "^11.6.1",
     "gh-pages": "^2.0.1",
     "jest": "^24.5.0",
-    "uglify-js": "^2.7.0",
-    "uglifycss": "0.0.20"
+    "uglify-js": "^3.5.2",
+    "uglifycss": "0.0.29"
   }
 }
