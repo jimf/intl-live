@@ -6,7 +6,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import MessageEditor from '../components/MessageEditor';
 import ContextEditor from '../components/ContextEditor';
 import FormatsEditor from '../components/FormatsEditor';
-import * as actions from '../actions';
+import * as actions from '../state';
 import * as selectors from '../selectors';
 
 const
