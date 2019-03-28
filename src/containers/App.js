@@ -1,4 +1,4 @@
-import { Component, createFactory } from 'react';
+import { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';

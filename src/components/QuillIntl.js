@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Quill from 'react-quill';
 
 export default class QuillIntl extends Component {

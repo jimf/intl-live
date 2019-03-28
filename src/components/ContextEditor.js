@@ -1,5 +1,5 @@
 import React from 'react';
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 
 const handleContextChange = (f, x) => e => f({ [x]: e.target.value });
 const inputTypeMap = {
