@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -23,13 +23,13 @@ class AppContainer extends Component {
                             <Tab>Formats</Tab>
                         </TabList>
                         <TabPanel>
-                            <MessageEditor {...props} />
+                            <MessageEditor {...this.props} />
                         </TabPanel>
                         <TabPanel>
-                            <ContextEditor {...props} />
+                            <ContextEditor {...this.props} />
                         </TabPanel>
                         <TabPanel>
-                            <FormatsEditor {...props} />
+                            <FormatsEditor {...this.props} />
                         </TabPanel>
                     </Tabs>
                 </div>
