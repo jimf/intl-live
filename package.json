@@ -11,9 +11,25 @@
   "scripts": {
     "dist": "npm run dist-js && npm run dist-css",
     "dist-css": "uglifycss node_modules/quill/dist/quill.snow.css css/normalize.css css/skeleton.css css/main.css > dist/intl-live.min.css",
-    "dist-js": "browserify src/main.js -o dist/intl-live.js -t [ babelify --presets [ es2015 ] ] && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
-    "start": "budo src/main.js --live --open -- -t [ babelify --presets [ es2015 ] ]",
-    "test": "tape -r babel-register test/index.js | tap-spec"
+    "dist-js": "browserify src/main.js -o dist/intl-live.js && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
+    "start": "budo src/main.js --live --open",
+    "test": "tape -r test/index.js | tap-spec"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "comments": false
+        }
+      ]
+    ]
   },
   "license": "MIT",
   "dependencies": {
@@ -35,10 +51,10 @@
     "reselect": "^2.5.3"
   },
   "devDependencies": {
-    "babel-core": "^6.10.4",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-register": "^6.9.0",
-    "babelify": "^7.3.0",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-react": "^7.0.0",
+    "babelify": "^10.0.0",
     "budo": "^8.3.0",
     "jsdom": "^9.4.1",
     "tap-spec": "^4.1.1",
