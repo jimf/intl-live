@@ -13,7 +13,7 @@
     "dist-css": "uglifycss node_modules/quill/dist/quill.snow.css css/normalize.css css/skeleton.css css/main.css > dist/intl-live.min.css",
     "dist-js": "browserify src/main.js -o dist/intl-live.js && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
     "start": "budo src/main.js --live --open",
-    "test": "tape -r test/index.js | tap-spec"
+    "test": "jest"
   },
   "babel": {
     "presets": [
@@ -56,10 +56,7 @@
     "@babel/preset-react": "^7.0.0",
     "babelify": "^10.0.0",
     "budo": "^8.3.0",
-    "jsdom": "^9.4.1",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.6.0",
-    "testdom": "^2.0.0",
+    "jest": "^24.5.0",
     "uglify-js": "^2.7.0",
     "uglifycss": "0.0.20"
   }

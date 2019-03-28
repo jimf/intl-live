@@ -1,38 +1,35 @@
-import test from 'tape';
 import * as subject from '../src/actions';
 
-test('actions - SET_MESSAGE', t => {
-    t.equal(subject.SET_MESSAGE, 'SET_MESSAGE');
-    t.deepEqual(subject.setMessage('dummy'), {
-        type: subject.SET_MESSAGE,
-        payload: 'dummy'
+describe('Actions', () => {
+    test('SET_MESSAGE', () => {
+        expect(subject.SET_MESSAGE).toBe('SET_MESSAGE');
+        expect(subject.setMessage('dummy')).toEqual({
+            type: subject.SET_MESSAGE,
+            payload: 'dummy'
+        });
     });
-    t.end();
-});
 
-test('actions - SET_CONTEXT_VALUE', t => {
-    t.equal(subject.SET_CONTEXT_VALUE, 'SET_CONTEXT_VALUE');
-    t.deepEqual(subject.setContextValue({ dummy: 'dummy' }), {
-        type: subject.SET_CONTEXT_VALUE,
-        payload: { dummy: 'dummy' }
+    test('SET_CONTEXT_VALUE', () => {
+        expect(subject.SET_CONTEXT_VALUE).toBe('SET_CONTEXT_VALUE');
+        expect(subject.setContextValue({ dummy: 'dummy' })).toEqual({
+            type: subject.SET_CONTEXT_VALUE,
+            payload: { dummy: 'dummy' }
+        });
     });
-    t.end();
-});
 
-test('actions - SET_FORMATS', t => {
-    t.equal(subject.SET_FORMATS, 'SET_FORMATS');
-    t.deepEqual(subject.setFormats({ dummy: 'dummy' }), {
-        type: subject.SET_FORMATS,
-        payload: { dummy: 'dummy' }
+    test('SET_FORMATS', () => {
+        expect(subject.SET_FORMATS).toBe('SET_FORMATS');
+        expect(subject.setFormats({ dummy: 'dummy' })).toEqual({
+            type: subject.SET_FORMATS,
+            payload: { dummy: 'dummy' }
+        });
     });
-    t.end();
-});
 
-test('actions - SET_RENDER_LOCALE', t => {
-    t.equal(subject.SET_RENDER_LOCALE, 'SET_RENDER_LOCALE');
-    t.deepEqual(subject.setRenderLocale('dummy'), {
-        type: subject.SET_RENDER_LOCALE,
-        payload: 'dummy'
+    test('SET_RENDER_LOCALE', () => {
+        expect(subject.SET_RENDER_LOCALE).toBe('SET_RENDER_LOCALE');
+        expect(subject.setRenderLocale('dummy')).toEqual({
+            type: subject.SET_RENDER_LOCALE,
+            payload: 'dummy'
+        });
     });
-    t.end();
 });
