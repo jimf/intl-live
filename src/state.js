@@ -52,14 +52,6 @@ const initialState = () => ({
     context: {},
     formats: '{}',
     renderLocale: 'en-US',
-    locales: [
-        'cs-CZ',
-        'en-US',
-        'es-AR',
-        'fr-FR',
-        'ja-JP',
-        'pt-BR'
-    ]
 });
 
 export default (state = initialState(), action) => {

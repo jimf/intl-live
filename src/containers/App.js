@@ -8,6 +8,15 @@ import FormatsEditor from '../components/FormatsEditor';
 import * as actions from '../state';
 import * as selectors from '../selectors';
 
+const locales = [
+    'cs-CZ',
+    'en-US',
+    'es-AR',
+    'fr-FR',
+    'ja-JP',
+    'pt-BR'
+];
+
 class AppContainer extends Component {
     render() {
         const { variableNames } = this.props;
@@ -38,7 +47,7 @@ class AppContainer extends Component {
                     <label className="u-pull-right">
                         Locale:{' '}
                         <select value={this.props.renderLocale} onChange={e => this.props.setRenderLocale(e.target.value)}>
-                            {this.props.locales.map(locale => (
+                            {locales.map(locale => (
                                 <option key={locale}>{locale}</option>
                             ))}
                         </select>
