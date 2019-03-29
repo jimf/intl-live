@@ -32,6 +32,17 @@ class AppContainer extends Component {
                             <FormatsEditor {...this.props} />
                         </TabPanel>
                     </Tabs>
+                    <pre>
+                        <code>{this.props.rendered || ' '}</code>
+                    </pre>
+                    <label className="u-pull-right">
+                        Locale:{' '}
+                        <select value={this.props.renderLocale} onChange={e => this.props.setRenderLocale(e.target.value)}>
+                            {this.props.locales.map(locale => (
+                                <option key={locale}>{locale}</option>
+                            ))}
+                        </select>
+                    </label>
                 </div>
             </div>
         );
