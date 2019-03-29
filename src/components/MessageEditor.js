@@ -1,21 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Quill from './QuillIntl';
-
-const formats = [];
-
-/**
- * Call props change handler with the text value of the editor on change.
- */
-const handleChange = onChange => (value, delta, source, editor) => {
-    const text = editor.getText();
-    onChange({ text, html: value });
-};
+import IntlEditor from './IntlEditor';
 
 const MessageEditor = ({
     locales,
     message,
-    htmlMessage,
     renderLocale,
     rendered,
     setMessage,
@@ -24,16 +13,12 @@ const MessageEditor = ({
 }) => (
     <div>
         <div>
-            <strong>Variables:</strong>
+            <strong>Variables:</strong>{' '}
             {variableNames.join(', ')}
         </div>
-        <Quill
-            theme="snow"
-            toolbar={false}
-            styles={false}
-            formats={formats}
-            value={htmlMessage}
-            onChange={handleChange(setMessage)}
+        <IntlEditor
+            text={message}
+            onChange={setMessage}
         />
         <pre>
             <code>{rendered || ' '}</code>
@@ -52,7 +37,6 @@ const MessageEditor = ({
 MessageEditor.propTypes = {
     locales: PropTypes.array.isRequired,
     message: PropTypes.string.isRequired,
-    htmlMessage: PropTypes.string.isRequired,
     renderLocale: PropTypes.string.isRequired,
     rendered: PropTypes.string.isRequired,
     setMessage: PropTypes.func.isRequired,

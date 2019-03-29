@@ -30,10 +30,7 @@ describe('State', () => {
 
     describe('setMessage', () => {
         it('should update message state', () => {
-            store.dispatch(subject.setMessage({
-                text: 'Dummy text value',
-                html: '<html><body>Dummy html value</body></html>',
-            }));
+            store.dispatch(subject.setMessage('Dummy text value'));
             expect(selectors.getMessage(store.getState())).toBe('Dummy text value');
         });
     });

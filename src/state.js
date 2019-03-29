@@ -6,14 +6,12 @@ const SET_RENDER_LOCALE = 'SET_RENDER_LOCALE';
 /**
  * Action creator for updating message state.
  *
- * @param {object} payload Payload object
- * @param {string} payload.text Text message value
- * @param {string} payload.html HTML message value
+ * @param {string} message New message value
  * @return {object} Redux action
  */
-export const setMessage = payload => ({
+export const setMessage = message => ({
     type: SET_MESSAGE,
-    payload,
+    payload: message,
 });
 
 /**
@@ -51,7 +49,6 @@ export const setRenderLocale = locale => ({
 
 const initialState = () => ({
     message: '',
-    htmlMessage: '',
     context: {},
     formats: '{}',
     renderLocale: 'en-US',
@@ -70,8 +67,7 @@ export default (state = initialState(), action) => {
         case SET_MESSAGE:
             return {
                 ...state,
-                message: action.payload.text,
-                htmlMessage: action.payload.html,
+                message: action.payload,
             };
 
         case SET_CONTEXT_VALUE:
