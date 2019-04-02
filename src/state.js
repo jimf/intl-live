@@ -1,7 +1,10 @@
+import lz from 'lz-string';
+
 const SET_MESSAGE = 'SET_MESSAGE';
 const SET_CONTEXT_VALUE = 'SET_CONTEXT_VALUE';
 const SET_FORMATS = 'SET_FORMATS';
 const SET_RENDER_LOCALE = 'SET_RENDER_LOCALE';
+const SET_STATE_FROM_SERIALIZED = 'SET_STATE_FROM_SERIALIZED';
 
 /**
  * Action creator for updating message state.
@@ -47,6 +50,17 @@ export const setRenderLocale = locale => ({
     payload: locale,
 });
 
+/**
+ * Update state to match given serialized state.
+ *
+ * @param {string} payload Serialized state
+ * @return {object} Redux action
+ */
+export const setStateFromSerialized = payload => ({
+    type: SET_STATE_FROM_SERIALIZED,
+    payload,
+});
+
 const initialState = () => ({
     message: '',
     context: {},
@@ -80,6 +94,22 @@ export default (state = initialState(), action) => {
                 renderLocale: action.payload,
             };
 
+        case SET_STATE_FROM_SERIALIZED:
+            try {
+                const values = JSON.parse(
+                    lz.decompressFromEncodedURIComponent(action.payload)
+                );
+                return {
+                    message: values[0],
+                    context: values[1],
+                    formats: values[2],
+                    renderLocale: values[3],
+                };
+            } catch (e) {
+                console.warn('Invalid serialized state ignored');
+                return state;
+            }
+
         default:
             return state;
     }
@@ -91,3 +121,10 @@ selectors.getMessage = state => state.message;
 selectors.getLocale = state => state.renderLocale;
 selectors.getContext = state => state.context;
 selectors.getFormats = state => state.formats;
+selectors.getSerialized = state =>
+    lz.compressToEncodedURIComponent(JSON.stringify([
+        state.message,
+        state.context,
+        state.formats,
+        state.renderLocale,
+    ]));
