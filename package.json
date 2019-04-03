@@ -9,9 +9,9 @@
   },
   "private": true,
   "scripts": {
-    "build": "npm run build-js && npm run build-css",
-    "build-css": "uglifycss node_modules/react-tabs/style/react-tabs.css css/normalize.css css/skeleton.css css/main.css > dist/intl-live.min.css",
-    "build-js": "browserify src/index.js -o dist/intl-live.js && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
+    "build": "rimraf dist && mkdir dist && cp index.html dist && npm run build-js && npm run build-css",
+    "build-css": "mkdir dist/css && uglifycss css/react-tabs.css > dist/css/react-tabs.css && uglifycss css/normalize.css > dist/css/normalize.css && uglifycss css/skeleton.css > dist/css/skeleton.css && uglifycss css/main.css > dist/css/main.css",
+    "build-js": "NODE_ENV=production browserify src/index.js | uglifyjs -mc > dist/index.js",
     "deploy": "gh-pages -d dist",
     "start": "budo src/index.js --live --open --host=localhost",
     "test": "jest --coverage"
@@ -58,6 +58,7 @@
     "dedent": "^0.7.0",
     "gh-pages": "^2.0.1",
     "jest": "^24.5.0",
+    "rimraf": "^2.6.3",
     "uglify-js": "^3.5.2",
     "uglifycss": "0.0.29"
   }
