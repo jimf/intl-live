@@ -1,37 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as IcuMessage from '../icu_message';
 
 const insertionMap = {
-    number: '{foo, number}',
-    date: '{foo, date, medium}',
-    time: '{foo, time, medium}',
-    select: `
-{foo, select,
-    foo {Foo}
-    bar {Bar}
-    other {Baz}
-}`.trim(),
-    plural: `
-{foo, plural,
-    =0 {no foos}
-    one {# foo}
-    other {# foos}
-}`.trim(),
-    selectordinal: `
-{foo, selectordinal,
-    one {#st}
-    two {#nd}
-    few {#rd}
-    other {#th}
-}`.trim(),
+    number: IcuMessage.tidy('{foo, number}'),
+    date: IcuMessage.tidy('{foo, date, medium}'),
+    time: IcuMessage.tidy('{foo, time, medium}'),
+    select: IcuMessage.tidy('{foo, select, foo {Foo} bar {Bar} other {Baz}}'),
+    plural: IcuMessage.tidy('{foo, plural, =0 {no foos} one {# foo} other {# foos}}'),
+    selectordinal: IcuMessage.tidy('{foo, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}'),
 };
 
 class IntlEditor extends Component {
     constructor(props) {
         super(props);
         this.textRef = React.createRef();
-        this.handleChange = this.handleChange.bind(this);
-        this.handleButton = this.handleButton.bind(this);
+        ['Change', 'IcuButton', 'Tidy', 'Uglify'].forEach(name => {
+            const handlerName = `handle${name}`;
+            this[handlerName] = this[handlerName].bind(this);
+        });
     }
 
     handleChange(e) {
@@ -42,8 +29,24 @@ class IntlEditor extends Component {
         this.props.onChange(e.target.value);
     }
 
-    handleButton(e) {
+    handleIcuButton(e) {
         document.execCommand('inserttext', false, insertionMap[e.target.value]);
+    }
+
+    handleTidy() {
+        try {
+            this.props.onChange(IcuMessage.tidy(this.props.text));
+        } catch (e) {
+            /* ignore */
+        }
+    }
+
+    handleUglify() {
+        try {
+            this.props.onChange(IcuMessage.uglify(this.props.text));
+        } catch (e) {
+            /* ignore */
+        }
     }
 
     render() {
@@ -55,11 +58,13 @@ class IntlEditor extends Component {
                             type="button"
                             key={type}
                             value={type}
-                            onClick={this.handleButton}
+                            onClick={this.handleIcuButton}
                         >
                             {type}
                         </button>
                     ))}
+                    <button type="button" onClick={this.handleTidy}>Tidy</button>
+                    <button type="button" onClick={this.handleUglify}>Uglify</button>
                 </div>
                 <textarea
                     className="intl-editor__input u-full-width"
