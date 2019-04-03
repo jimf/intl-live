@@ -17,7 +17,9 @@ const ContextEditor = ({
     <div>
         {variables.map(([name, type]) => (
             <label key={name}>
-                <span className="variable-label">{name}</span>
+                <span className="variable-label">
+                    {name} <span className="variable-label__type">{inputTypeMap[type] || 'text'}</span>
+                </span>
                 <input
                     type={inputTypeMap[type] || 'text'}
                     value={context[name] || ''}

@@ -10,6 +10,11 @@
     display: block;
 }
 
+.variable-label__type {
+    font-style: italic;
+    font-weight: normal;
+}
+
 .variable-input {
     margin-bottom: 15px;
     width: 50%;
