@@ -9,42 +9,56 @@
   },
   "private": true,
   "scripts": {
-    "dist": "npm run dist-js && npm run dist-css",
-    "dist-css": "uglifycss node_modules/quill/dist/quill.snow.css css/normalize.css css/skeleton.css css/main.css > dist/intl-live.min.css",
-    "dist-js": "browserify src/main.js -o dist/intl-live.js -t [ babelify --presets [ es2015 ] ] && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
-    "start": "budo src/main.js --live --open -- -t [ babelify --presets [ es2015 ] ]",
-    "test": "tape -r babel-register test/index.js | tap-spec"
+    "build": "npm run build-js && npm run build-css",
+    "build-css": "uglifycss node_modules/react-tabs/style/react-tabs.css css/normalize.css css/skeleton.css css/main.css > dist/intl-live.min.css",
+    "build-js": "browserify src/index.js -o dist/intl-live.js && uglifyjs dist/intl-live.js -o dist/intl-live.min.js",
+    "deploy": "gh-pages -d dist",
+    "start": "budo src/index.js --live --open --host=localhost",
+    "test": "jest --coverage"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "comments": false
+        }
+      ]
+    ]
   },
   "license": "MIT",
   "dependencies": {
+    "ast-traverse": "^0.1.1",
     "babel-polyfill": "^6.3.14",
     "data.either": "^1.4.0",
     "intl-messageformat": "^1.3.0",
     "intl-messageformat-parser": "^1.2.0",
-    "quill": "^0.20.1",
-    "ramda": "^0.21.0",
-    "react": "^15.2.1",
-    "react-dom": "^15.2.1",
-    "react-hyperscript": "^2.4.0",
-    "react-quill": "github:zenoamaro/react-quill",
-    "react-redux": "^4.4.5",
-    "react-tabs": "^0.7.0",
-    "redux": "^3.5.2",
-    "redux-actions": "^0.10.1",
-    "redux-thunk": "^2.1.0",
+    "lodash.debounce": "^4.0.8",
+    "lz-string": "^1.4.4",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^6.0.1",
+    "react-tabs": "^3.0.0",
+    "redux": "^4.0.1",
     "reselect": "^2.5.3"
   },
   "devDependencies": {
-    "babel-core": "^6.10.4",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-register": "^6.9.0",
-    "babelify": "^7.3.0",
-    "budo": "^8.3.0",
-    "jsdom": "^9.4.1",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.6.0",
-    "testdom": "^2.0.0",
-    "uglify-js": "^2.7.0",
-    "uglifycss": "0.0.20"
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-react": "^7.0.0",
+    "babelify": "^10.0.0",
+    "budo": "^11.6.1",
+    "dedent": "^0.7.0",
+    "gh-pages": "^2.0.1",
+    "jest": "^24.5.0",
+    "uglify-js": "^3.5.2",
+    "uglifycss": "0.0.29"
   }
 }

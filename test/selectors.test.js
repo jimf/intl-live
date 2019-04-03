@@ -1,129 +1,124 @@
-import test from 'tape';
 import * as subject from '../src/selectors';
 
-test('selectors - variableNames', t => {
-    const cases = [
-        {
-            state: {
-                message: 'Hello world'
+describe('Selectors', () => {
+    test('variableNames', () => {
+        const cases = [
+            {
+                state: {
+                    message: 'Hello world'
+                },
+                expected: []
             },
-            expected: []
-        },
-        {
-            state: {
-                message: 'Hello, {name}'
+            {
+                state: {
+                    message: 'Hello, {name}'
+                },
+                expected: ['name']
             },
-            expected: ['name']
-        },
-        {
-            state: {
-                message: '{this is a SyntaxError}'
+            {
+                state: {
+                    message: '{this is a SyntaxError}'
+                },
+                expected: []
             },
-            expected: []
-        },
-        {
-            state: {
-                message: '{count} {count, plural, one {item} other {items} }'
-            },
-            expected: ['count']
-        }
-    ];
+            {
+                state: {
+                    message: '{count} {count, plural, one {item} other {items} }'
+                },
+                expected: ['count']
+            }
+        ];
 
-    cases.forEach(testcase => {
-        t.deepEqual(subject.variableNames(testcase.state), testcase.expected);
+        cases.forEach(testcase => {
+            expect(subject.variableNames(testcase.state)).toEqual(testcase.expected);
+        });
     });
 
-    t.end();
-});
+    test('variables', () => {
+        const cases = [
+            {
+                state: {
+                    message: 'Hello world'
+                },
+                expected: []
+            },
+            {
+                state: {
+                    message: 'Hello, {name}'
+                },
+                expected: [['name', null]]
+            },
+            {
+                state: {
+                    message: '{this is a SyntaxError}'
+                },
+                expected: []
+            },
+            {
+                state: {
+                    message: '{count} {count, plural, one {item} other {items} }'
+                },
+                expected: [['count', 'pluralFormat']]
+            }
+        ];
 
-test('selectors - variables', t => {
-    const cases = [
-        {
-            state: {
-                message: 'Hello world'
-            },
-            expected: []
-        },
-        {
-            state: {
-                message: 'Hello, {name}'
-            },
-            expected: [['name', null]]
-        },
-        {
-            state: {
-                message: '{this is a SyntaxError}'
-            },
-            expected: []
-        },
-        {
-            state: {
-                message: '{count} {count, plural, one {item} other {items} }'
-            },
-            expected: [['count', 'pluralFormat']]
-        }
-    ];
-
-    cases.forEach(testcase => {
-        t.deepEqual(subject.variables(testcase.state), testcase.expected);
+        cases.forEach(testcase => {
+            expect(subject.variables(testcase.state)).toEqual(testcase.expected);
+        });
     });
 
-    t.end();
-});
+    test('rendered', () => {
+        const cases = [
+            {
+                state: {
+                    message: 'Hello world',
+                    formats: '{}',
+                    renderedLocale: 'en-US'
+                },
+                expected: 'Hello world'
+            },
+            {
+                state: {
+                    message: 'Hello {name}',
+                    context: { name: 'Jim' },
+                    formats: '{}',
+                    renderedLocale: 'en-US'
+                },
+                expected: 'Hello Jim'
+            },
+            {
+                state: {
+                    message: '{this is a SyntaxError}',
+                    formats: '{}'
+                },
+                expected: 'SyntaxError: Expected "," or "}" but "i" found.'
+            },
+            {
+                state: {
+                    message: 'I have {money, number, usd}',
+                    context: { money: '5' },
+                    formats: `{
+                        "number": {
+                            "usd": { "style": "currency", "currency": "USD" }
+                        }
+                    }`,
+                    renderedLocale: 'en-US'
+                },
+                expected: 'I have $5.00'
+            },
+            {
+                state: {
+                    message: 'I have {money, number, usd}',
+                    context: { money: '5' },
+                    formats: 'this is a SyntaxError',
+                    renderedLocale: 'en-US'
+                },
+                expected: 'Formats: SyntaxError: Unexpected token h in JSON at position 1'
+            },
+        ];
 
-test('selectors - rendered', t => {
-    const cases = [
-        {
-            state: {
-                message: 'Hello world',
-                formats: '{}',
-                renderedLocale: 'en-US'
-            },
-            expected: 'Hello world'
-        },
-        {
-            state: {
-                message: 'Hello {name}',
-                context: { name: 'Jim' },
-                formats: '{}',
-                renderedLocale: 'en-US'
-            },
-            expected: 'Hello Jim'
-        },
-        {
-            state: {
-                message: '{this is a SyntaxError}',
-                formats: '{}'
-            },
-            expected: 'SyntaxError: Expected "," or "}" but "i" found.'
-        },
-        {
-            state: {
-                message: 'I have {money, number, usd}',
-                context: { money: '5' },
-                formats: `{
-                    "number": {
-                        "usd": { "style": "currency", "currency": "USD" }
-                    }
-                }`,
-                renderedLocale: 'en-US'
-            },
-            expected: 'I have $5.00'
-        },
-        {
-            state: {
-                message: 'I have {money, number, usd}',
-                context: { money: '5' },
-                formats: 'this is a SyntaxError',
-                renderedLocale: 'en-US'
-            },
-            expected: 'Formats: SyntaxError: Unexpected token h'
-        },
-    ];
-
-    cases.forEach(testcase => {
-        t.deepEqual(subject.rendered(testcase.state), testcase.expected);
+        cases.forEach(testcase => {
+            expect(subject.rendered(testcase.state)).toBe(testcase.expected);
+        });
     });
-
-    t.end();
 });

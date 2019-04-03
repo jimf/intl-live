@@ -1,59 +1,60 @@
-import { Component, createFactory } from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import h from 'react-hyperscript';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import MessageEditor from '../components/MessageEditor';
 import ContextEditor from '../components/ContextEditor';
 import FormatsEditor from '../components/FormatsEditor';
-import * as actions from '../actions';
+import * as actions from '../state';
 import * as selectors from '../selectors';
 
-const
-    tab = createFactory(Tab),
-    tabs = createFactory(Tabs),
-    tabList = createFactory(TabList),
-    tabPanel = createFactory(TabPanel),
-    messageEditor = createFactory(MessageEditor),
-    contextEditor = createFactory(ContextEditor),
-    formatsEditor = createFactory(FormatsEditor);
+const locales = [
+    'cs-CZ',
+    'en-US',
+    'es-AR',
+    'fr-FR',
+    'ja-JP',
+    'pt-BR'
+];
 
 class AppContainer extends Component {
     render() {
         const { variableNames } = this.props;
 
-        return h('div.app.animated.fadeIn', [
-            h('div.container', [
-                h('h1.header', 'Intl Live'),
-                tabs(null, [
-                    tabList({ key: 'tablist' }, [
-                        tab({ key: 'template-tab' }, 'Template'),
-                        tab({
-                            key: 'context-tab',
-                            disabled: variableNames.length === 0
-                        }, 'Context'),
-                        tab({
-                            key: 'formats-tab'
-                        }, 'Formats')
-                    ]),
-                    tabPanel({ key: 'template-tabpanel' }, [
-                        messageEditor(Object.assign({
-                            key: 'message-editor'
-                        }, this.props))
-                    ]),
-                    tabPanel({ key: 'context-tabpanel' }, [
-                        contextEditor(Object.assign({
-                            key: 'context-editor'
-                        }, this.props))
-                    ]),
-                    tabPanel({ key: 'formats-tabpanel' }, [
-                        formatsEditor(Object.assign({
-                            key: 'formats-editor'
-                        }, this.props))
-                    ])
-                ])
-            ])
-        ]);
+        return (
+            <div className="app animated fadeIn">
+                <div className="container">
+                    <h1 className="header">Intl Live</h1>
+                    <Tabs>
+                        <TabList>
+                            <Tab>Template</Tab>
+                            <Tab disabled={!variableNames.length}>Context</Tab>
+                            <Tab>Formats</Tab>
+                        </TabList>
+                        <TabPanel>
+                            <MessageEditor {...this.props} />
+                        </TabPanel>
+                        <TabPanel>
+                            <ContextEditor {...this.props} />
+                        </TabPanel>
+                        <TabPanel>
+                            <FormatsEditor {...this.props} />
+                        </TabPanel>
+                    </Tabs>
+                    <pre>
+                        <code>{this.props.rendered || ' '}</code>
+                    </pre>
+                    <label className="u-pull-right">
+                        Locale:{' '}
+                        <select value={this.props.renderLocale} onChange={e => this.props.setRenderLocale(e.target.value)}>
+                            {locales.map(locale => (
+                                <option key={locale}>{locale}</option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+            </div>
+        );
     }
 }
 
